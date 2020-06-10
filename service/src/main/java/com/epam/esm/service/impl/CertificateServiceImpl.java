@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -21,19 +21,32 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public List<Certificate> getCertificates() {
-		List<Certificate> list = certificateRepository.getCertificates();
+	public Collection<Certificate> getAll() {
+		Collection<Certificate> list = certificateRepository.getAll();
 		return list;
 	}
 
 	@Override
-	public Optional<Certificate> getCertificate(long id) {
-		return certificateRepository.getCertificate(id);
+	public Optional<Certificate> getById(long id) {
+		return certificateRepository.getById(id);
 	}
 
 	@Override
-	public Optional<Certificate> addCertificate(Certificate certificate) {
+	public Optional<Certificate> save(Certificate certificate) {
 		certificate.setCreationDate(LocalDate.now());
-		return certificateRepository.addCertificate(certificate);
+		return certificateRepository.save(certificate);
+	}
+
+	@Override
+	public Optional<Certificate> update(Certificate certificate) {
+		certificate.setModificationDate(LocalDate.now());
+		return certificateRepository.update(certificate);
+	}
+
+	@Override
+	public void remove(long id) {
+		if (getById(id).isPresent()) {
+			certificateRepository.remove(getById(id).get());
+		}
 	}
 }

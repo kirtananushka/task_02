@@ -3,20 +3,20 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.CertificateSpecification;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 public interface CertificateRepository {
 
-	Optional<Certificate> addCertificate(Certificate certificate);
+	Optional<Certificate> save(Certificate certificate);
 
-	void removeCertificate(Certificate certificate);
+	void remove(Certificate certificate);
 
-	void updateCertificate(Certificate certificate);
+	Optional<Certificate> update(Certificate certificate);
 
-	List<Certificate> query(CertificateSpecification specification);
+	Collection<Certificate> query(CertificateSpecification specification);
 
-	List<Certificate> getCertificates();
+	Collection<Certificate> getAll();
 
-	Optional<Certificate> getCertificate(long id);
+	Optional<Certificate> getById(long id);
 }

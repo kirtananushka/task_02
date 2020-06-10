@@ -21,5 +21,4 @@ public class EntityOperationException extends RuntimeException {
 	                                boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
-
 }

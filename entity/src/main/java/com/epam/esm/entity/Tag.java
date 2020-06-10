@@ -1,33 +1,30 @@
 package com.epam.esm.entity;
 
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 
-@Component
 public class Tag implements Serializable {
 
 	private static final long serialVersionUID = 4793809016058885307L;
-	private long tagId;
-	private String tagName;
+	private long id;
+	private String name;
 
 	public Tag() {
 	}
 
-	public long getTagId() {
-		return tagId;
+	public long getId() {
+		return id;
 	}
 
-	public void setTagId(long tagId) {
-		this.tagId = tagId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public String getTagName() {
-		return tagName;
+	public String getName() {
+		return name;
 	}
 
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -39,24 +36,24 @@ public class Tag implements Serializable {
 			return false;
 		}
 		Tag tag = (Tag) o;
-		if (tagId != tag.tagId) {
+		if (id != tag.id) {
 			return false;
 		}
-		return tagName != null ? tagName.equals(tag.tagName) : tag.tagName == null;
+		return name != null ? name.equals(tag.name) : tag.name == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (int) (tagId ^ (tagId >>> 32));
-		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+		int result = (int) (id ^ (id >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Tag{");
-		sb.append("id=").append(tagId);
-		sb.append(", description='").append(tagName).append('\'');
+		sb.append("id=").append(id);
+		sb.append(", description='").append(name).append('\'');
 		sb.append('}');
 		return sb.toString();
 	}
