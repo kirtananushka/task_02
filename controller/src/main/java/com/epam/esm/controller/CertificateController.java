@@ -19,7 +19,7 @@ import java.util.Collection;
 @RequestMapping("/api/v1")
 public class CertificateController {
 
-	private CertificateService certificateService;
+	private final CertificateService certificateService;
 
 	@Autowired
 	public CertificateController(CertificateService certificateService) {
@@ -40,7 +40,7 @@ public class CertificateController {
 
 	@PostMapping("/certificates")
 	public Certificate addCertificate(@RequestBody Certificate certificate) {
-		certificate.setId(0);
+		certificate.setId(0L);
 		return certificateService.save(certificate)
 		                         .orElseThrow(() -> new EntityOperationException(
 						                         "Certificate was not added"));

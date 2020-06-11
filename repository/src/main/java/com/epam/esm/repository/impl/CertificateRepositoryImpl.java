@@ -1,10 +1,8 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
-import com.epam.esm.repository.mapper.TagMapper;
 import com.epam.esm.specification.CertificateSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -40,20 +38,18 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 					+ "duration = :duration WHERE cert_id = :id;";
 	public static final String QUERY_REMOVE = "DELETE FROM certificates\n"
 					+ "WHERE cert_id = :id;";
-	public static final String QUERY_GET_TAGS_BY_CERT =
-					"SELECT tag_id, tag_name FROM tags INNER JOIN linkage ON tag_id = tag_id_fk"
-									+ " WHERE cert_id_fk = :id;";
-	public static final String QUERY_ADD_TAGS = "INSERT INTO tags (tag_name) VALUES (:tag_name);";
-	public static final String QUERY_ADD_LINKAGE = "INSERT INTO linkage (cert_id_fk, tag_id_fk)\n"
-					+ "VALUES (:cert_id, :tag_id);";
 	public static final String QUERY_REMOVE_LINKAGE = "DELETE FROM linkage\n"
 					+ "WHERE cert_id_fk = :id;";
-	public static final String QUERY_GET_TAG_BY_NAME = "SELECT tag_id FROM tags\n"
-					+ "WHERE tag_name = :name";
+	private TagRepositoryImpl tagRepository;
 
 	@Autowired
 	public CertificateRepositoryImpl(DataSource dataSource) {
 		super.setDataSource(dataSource);
+	}
+
+	@Autowired
+	public void setTagRepository(TagRepositoryImpl tagRepository) {
+		this.tagRepository = tagRepository;
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, certKeyHolder);
 		long certId = (long) certKeyHolder.getKeys().get("cert_id");
 		certificate.setId(certId);
-		saveTags(certificate);
+		tagRepository.saveTagsByCertificate(certificate);
 		return getById(certId);
 	}
 
@@ -93,7 +89,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 		long certId = (long) keyHolder.getKeys().get("cert_id");
 		certificate.setId(certId);
 		removeLinkage(certificate);
-		saveTags(certificate);
+		tagRepository.saveTagsByCertificate(certificate);
 		return getById(certId);
 	}
 
@@ -107,7 +103,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 		List<Certificate> certificateList = getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_ALL, new CertificateMapper());
 		for (Certificate certificate : certificateList) {
-			certificate.setTags(getTagsByCertificateId(certificate.getId()));
+			certificate.setTags(tagRepository.getTagsByCertificateId(certificate.getId()));
 		}
 		return certificateList;
 	}
@@ -120,40 +116,8 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.stream()
 						.findAny()
 						.orElse(null);
-		certificate.setTags(getTagsByCertificateId(certificate.getId()));
+		certificate.setTags(tagRepository.getTagsByCertificateId(certificate.getId()));
 		return Optional.of(certificate);
-	}
-
-	private List<Tag> getTagsByCertificateId(long id) {
-		SqlParameterSource params = new MapSqlParameterSource("id", id);
-		return getNamedParameterJdbcTemplate().query(QUERY_GET_TAGS_BY_CERT, params, new TagMapper());
-	}
-
-	private long getTagByName(Tag tag) {
-		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
-		return getNamedParameterJdbcTemplate()
-						.query(QUERY_GET_TAG_BY_NAME, params, (resultSet, i) -> resultSet.getLong(1))
-						.stream()
-						.findAny()
-						.orElse(0L);
-	}
-
-	private void saveTags(Certificate certificate) {
-		List<Tag> tagList = certificate.getTags();
-		KeyHolder tagKeyHolder = new GeneratedKeyHolder();
-		SqlParameterSource tagParams;
-		SqlParameterSource linkageParams;
-		for (Tag tag : tagList) {
-			long tagId = getTagByName(tag);
-			if (tagId == 0) {
-				tagParams = new MapSqlParameterSource("tag_name", tag.getName());
-				getNamedParameterJdbcTemplate().update(QUERY_ADD_TAGS, tagParams, tagKeyHolder);
-				tagId = (long) tagKeyHolder.getKeys().get("tag_id");
-			}
-			linkageParams = new MapSqlParameterSource("cert_id", certificate.getId())
-							.addValue("tag_id", tagId);
-			getNamedParameterJdbcTemplate().update(QUERY_ADD_LINKAGE, linkageParams);
-		}
 	}
 
 	private void removeLinkage(Certificate certificate) {
