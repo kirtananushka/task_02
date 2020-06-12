@@ -13,15 +13,15 @@ public class CertificateMapper implements RowMapper<Certificate> {
 	@Override
 	public Certificate mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 		Certificate certificate = new Certificate();
-		certificate.setId(resultSet.getLong("cert_id"));
-		certificate.setName(resultSet.getString("cert_name"));
+		certificate.setId(resultSet.getLong("id"));
+		certificate.setName(resultSet.getString("name"));
 		certificate.setDescription(resultSet.getString("description"));
 		certificate.setPrice(resultSet.getBigDecimal("price"));
 		certificate.setCreationDate(
-						resultSet.getTimestamp("creation_date").toLocalDateTime().toLocalDate());
-		if (resultSet.getTimestamp("modification_date") != null) {
+						resultSet.getDate("creation_date").toLocalDate());
+		if (resultSet.getDate("modification_date") != null) {
 			certificate.setModificationDate(
-							resultSet.getTimestamp("modification_date").toLocalDateTime().toLocalDate());
+							resultSet.getDate("modification_date").toLocalDate());
 		}
 		certificate.setDuration(resultSet.getInt("duration"));
 		return certificate;

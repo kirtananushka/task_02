@@ -21,25 +21,25 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 				implements CertificateRepository {
 
 	public static final String QUERY_GET_BY_ID =
-					"SELECT cert_id, cert_name, description, price, creation_date, modification_date,\n"
-									+ "duration, tag_id, tag_name FROM certificates LEFT JOIN (tags INNER JOIN\n"
-									+ "linkage ON tag_id = tag_id_fk) ON cert_id = cert_id_fk WHERE cert_id = :id";
+					"SELECT id, name, description, price, creation_date, modification_date, duration\n"
+									+ "FROM certificates WHERE id = :id;";
 	public static final String QUERY_GET_ALL =
-					"SELECT cert_id, cert_name, description, price, creation_date, modification_date,\n"
-									+ "duration, tag_id, tag_name FROM certificates LEFT JOIN (tags INNER JOIN\n"
-									+ "linkage ON tag_id = tag_id_fk) ON cert_id = cert_id_fk ORDER BY cert_id";
-	public static final String QUERY_ADD = "INSERT INTO certificates(\n"
-					+ "cert_name, description, price, creation_date, modification_date, duration)\n"
-					+ "VALUES (:name, :description, :price, :creation_date, :modification_date,\n"
-					+ ":duration);";
-	public static final String QUERY_UPDATE = "UPDATE certificates\n"
-					+ "SET cert_name = :name, description = :description, price = :price,\n"
-					+ "creation_date = :creation_date, modification_date = :modification_date,\n"
-					+ "duration = :duration WHERE cert_id = :id;";
-	public static final String QUERY_REMOVE = "DELETE FROM certificates\n"
-					+ "WHERE cert_id = :id;";
-	public static final String QUERY_REMOVE_LINKAGE = "DELETE FROM linkage\n"
-					+ "WHERE cert_id_fk = :id;";
+					"SELECT id, name, description, price, creation_date, modification_date, duration\n"
+									+ " FROM certificates ORDER BY id;";
+	public static final String QUERY_ADD =
+					"INSERT INTO certificates(name, description, price, creation_date,\n"
+									+ "modification_date, duration)\n"
+									+ "VALUES (:name, :description, :price, :creation_date,\n"
+									+ ":modification_date, :duration);";
+	public static final String QUERY_UPDATE =
+					"UPDATE certificates\n"
+									+ "SET name = :name, description = :description, price = :price,\n"
+									+ "creation_date = :creation_date, modification_date = :modification_date,\n"
+									+ "duration = :duration WHERE certificates.id = :id;";
+	public static final String QUERY_REMOVE =
+					"DELETE FROM certificates WHERE id = :id;";
+	public static final String QUERY_UNBIND =
+					"DELETE FROM certificate_tag WHERE certificate_id = :id;";
 	private TagRepositoryImpl tagRepository;
 
 	@Autowired
@@ -63,9 +63,9 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, certKeyHolder);
-		long certId = (long) certKeyHolder.getKeys().get("cert_id");
+		long certId = (long) certKeyHolder.getKeys().get("id");
 		certificate.setId(certId);
-		tagRepository.saveTagsByCertificate(certificate);
+		tagRepository.bindCertificateTag(certificate);
 		return getById(certId);
 	}
 
@@ -86,10 +86,10 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_UPDATE, params, keyHolder);
-		long certId = (long) keyHolder.getKeys().get("cert_id");
+		long certId = (long) keyHolder.getKeys().get("id");
 		certificate.setId(certId);
-		removeLinkage(certificate);
-		tagRepository.saveTagsByCertificate(certificate);
+		unbindCertificateTag(certificate);
+		tagRepository.bindCertificateTag(certificate);
 		return getById(certId);
 	}
 
@@ -120,8 +120,8 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 		return Optional.of(certificate);
 	}
 
-	private void removeLinkage(Certificate certificate) {
+	private void unbindCertificateTag(Certificate certificate) {
 		SqlParameterSource params = new MapSqlParameterSource("id", certificate.getId());
-		getNamedParameterJdbcTemplate().update(QUERY_REMOVE_LINKAGE, params);
+		getNamedParameterJdbcTemplate().update(QUERY_UNBIND, params);
 	}
 }

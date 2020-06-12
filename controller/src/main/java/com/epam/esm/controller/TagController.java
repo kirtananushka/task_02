@@ -3,7 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityOperationException;
 import com.epam.esm.service.TagService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,15 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class TagController {
 
 	private final TagService tagService;
-
-	@Autowired
-	public TagController(TagService tagService) {
-		this.tagService = tagService;
-	}
 
 	@GetMapping("/tags")
 	public Collection<Tag> getTags() {

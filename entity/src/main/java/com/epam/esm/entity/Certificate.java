@@ -6,15 +6,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class Certificate implements Serializable {
+public class Certificate {
 
-	private static final long serialVersionUID = -2426966202789827763L;
 	private long id;
 	private String name;
 	private String description;
