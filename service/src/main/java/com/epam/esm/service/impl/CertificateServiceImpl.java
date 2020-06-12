@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,14 +11,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
 
-	private CertificateRepository certificateRepository;
-
-	@Autowired
-	public CertificateServiceImpl(CertificateRepository certificateRepository) {
-		this.certificateRepository = certificateRepository;
-	}
+	private final CertificateRepository certificateRepository;
 
 	@Override
 	public Collection<Certificate> getAll() {

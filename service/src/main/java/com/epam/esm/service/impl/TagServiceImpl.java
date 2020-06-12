@@ -3,21 +3,17 @@ package com.epam.esm.service.impl;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
 	private final TagRepository tagRepository;
-
-	@Autowired
-	public TagServiceImpl(TagRepository tagRepository) {
-		this.tagRepository = tagRepository;
-	}
 
 	@Override
 	public Collection<Tag> getAll() {
