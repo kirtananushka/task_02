@@ -1,10 +1,11 @@
 package com.epam.esm.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class Tag {
+@EqualsAndHashCode(callSuper = true)
+public class Tag extends Entity {
 
-	private long id;
 	private String name;
 }

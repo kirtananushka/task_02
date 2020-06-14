@@ -1,31 +1,17 @@
 package com.epam.esm.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class EntityErrorResponse {
 
 	private int status;
+	private String description;
 	private String message;
-
-	public EntityErrorResponse() {
-	}
-
-	public EntityErrorResponse(int status, String message) {
-		this.status = status;
-		this.message = message;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 }

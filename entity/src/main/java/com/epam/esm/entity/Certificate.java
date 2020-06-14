@@ -5,15 +5,16 @@ import com.epam.esm.util.LocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class Certificate {
+@EqualsAndHashCode(callSuper = true)
+public class Certificate extends Entity {
 
-	private long id;
 	private String name;
 	private String description;
 	private BigDecimal price;

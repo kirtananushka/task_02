@@ -12,6 +12,7 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(EntityOperationException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.NOT_FOUND.value(),
+						HttpStatus.NOT_FOUND.toString(),
 						e.getMessage());
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
@@ -20,6 +21,7 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(Exception e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
+						HttpStatus.BAD_REQUEST.toString(),
 						e.getMessage());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}

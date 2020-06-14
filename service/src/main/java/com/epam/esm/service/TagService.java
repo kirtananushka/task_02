@@ -9,9 +9,9 @@ public interface TagService {
 
 	Collection<Tag> getAll();
 
-	Optional<Tag> getById(long id);
+	Optional<Tag> getById(Long id);
 
 	Optional<Tag> save(Tag tag);
 
-	void remove(long id);
+	void remove(Long id);
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,39 +22,33 @@ public class CertificateController {
 
 	private final CertificateService certificateService;
 
-	@GetMapping("/certificates")
-	public Collection<Certificate> getCertificates() {
-		return certificateService.getAll();
-	}
-
-	@GetMapping("/certificates/{id}")
-	public Certificate getCertificate(@PathVariable long id) {
-		return certificateService.getById(id)
-		                         .orElseThrow(() -> new EntityOperationException(
-						                         "Certificate id was not found: " + id));
+	@GetMapping("/certificates/{certificate_id}")
+	public Certificate getCertificate(@PathVariable Long certificate_id) {
+		return certificateService.getById(certificate_id)
+		                         .orElseThrow(EntityOperationException::new);
 	}
 
 	@PostMapping("/certificates")
-	public Certificate addCertificate(@RequestBody Certificate certificate) {
+	public Certificate addCertificate(@RequestBody Certificate certificate,
+	                                  HttpServletResponse response) {
 		certificate.setId(0L);
+		response.setStatus(HttpServletResponse.SC_CREATED);
 		return certificateService.save(certificate)
-		                         .orElseThrow(() -> new EntityOperationException(
-						                         "Certificate was not added"));
+		                         .orElseThrow(EntityOperationException::new);
 	}
 
 	@PutMapping("/certificates")
 	public Certificate updateCertificate(@RequestBody Certificate certificate) {
 		return certificateService.update(certificate)
-		                         .orElseThrow(() -> new EntityOperationException(
-						                         "Certificate was not updated"));
+		                         .orElseThrow(EntityOperationException::new);
 	}
 
-	@DeleteMapping("/certificates/{id}")
-	public String removeCertificate(@PathVariable long id) {
-		if (certificateService.getById(id).isEmpty()) {
-			throw new EntityOperationException("Customer id was not found: " + id);
+	@DeleteMapping("/certificates/{certificate_id}")
+	public void removeCertificate(@PathVariable Long certificate_id, HttpServletResponse response) {
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		if (certificateService.getById(certificate_id).isEmpty()) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
-		certificateService.remove(id);
-		return "Certificate was deleted; id: " + id;
+		certificateService.remove(certificate_id);
 	}
 }

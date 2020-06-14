@@ -23,7 +23,7 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public Optional<Certificate> getById(long id) {
+	public Optional<Certificate> getById(Long id) {
 		return certificateRepository.getById(id);
 	}
 
@@ -40,7 +40,7 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public void remove(long id) {
+	public void remove(Long id) {
 		if (getById(id).isPresent()) {
 			certificateRepository.remove(getById(id).get());
 		}

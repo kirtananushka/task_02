@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 @RestController
@@ -26,27 +27,26 @@ public class TagController {
 		return tagService.getAll();
 	}
 
-	@GetMapping("/tags/{id}")
-	public Tag getTag(@PathVariable long id) {
-		return tagService.getById(id)
-		                 .orElseThrow(() -> new EntityOperationException(
-						                 "Tag id was not found: " + id));
+	@GetMapping("/tags/{tag_id}")
+	public Tag getTag(@PathVariable Long tag_id) {
+		return tagService.getById(tag_id)
+		                 .orElseThrow(EntityOperationException::new);
 	}
 
 	@PostMapping("/tags")
-	public Tag addTag(@RequestBody Tag tag) {
+	public Tag addTag(@RequestBody Tag tag, HttpServletResponse response) {
 		tag.setId(0L);
+		response.setStatus(HttpServletResponse.SC_CREATED);
 		return tagService.save(tag)
-		                 .orElseThrow(() -> new EntityOperationException(
-						                 "Tag was not added"));
+		                 .orElseThrow(EntityOperationException::new);
 	}
 
-	@DeleteMapping("/tags/{id}")
-	public String removeTag(@PathVariable long id) {
-		if (tagService.getById(id).isEmpty()) {
-			throw new EntityOperationException("Customer id was not found: " + id);
+	@DeleteMapping("/tags/{tag_id}")
+	public void removeTag(@PathVariable Long tag_id, HttpServletResponse response) {
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		if (tagService.getById(tag_id).isEmpty()) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
-		tagService.remove(id);
-		return "Tag was deleted; id: " + id;
+		tagService.remove(tag_id);
 	}
 }

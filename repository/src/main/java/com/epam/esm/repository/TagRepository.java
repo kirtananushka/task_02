@@ -1,7 +1,6 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.specification.TagSpecification;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,9 +11,7 @@ public interface TagRepository {
 
 	void remove(Tag tag);
 
-	Collection<Tag> query(TagSpecification specification);
-
 	Collection<Tag> getAll();
 
-	Optional<Tag> getById(long id);
+	Optional<Tag> getById(Long id);
 }

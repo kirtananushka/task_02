@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class LocalDateDeserializer extends StdDeserializer<LocalDate> {
 
-	private static final long serialVersionUID = 1138540436689224756L;
+	private static final Long serialVersionUID = 1138540436689224756L;
 
 	protected LocalDateDeserializer() {
 		super(LocalDate.class);

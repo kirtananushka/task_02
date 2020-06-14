@@ -9,11 +9,11 @@ public interface CertificateService {
 
 	Collection<Certificate> getAll();
 
-	Optional<Certificate> getById(long id);
+	Optional<Certificate> getById(Long id);
 
 	Optional<Certificate> save(Certificate certificate);
 
 	Optional<Certificate> update(Certificate certificate);
 
-	void remove(long id);
+	void remove(Long id);
 }

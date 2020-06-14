@@ -3,7 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
-import com.epam.esm.specification.CertificateSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -63,7 +62,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, certKeyHolder);
-		long certId = (long) certKeyHolder.getKeys().get("id");
+		Long certId = (Long) certKeyHolder.getKeys().get("id");
 		certificate.setId(certId);
 		tagRepository.bindCertificateTag(certificate);
 		return getById(certId);
@@ -86,16 +85,11 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_UPDATE, params, keyHolder);
-		long certId = (long) keyHolder.getKeys().get("id");
+		Long certId = (Long) keyHolder.getKeys().get("id");
 		certificate.setId(certId);
 		unbindCertificateTag(certificate);
 		tagRepository.bindCertificateTag(certificate);
 		return getById(certId);
-	}
-
-	@Override
-	public List<Certificate> query(CertificateSpecification specification) {
-		return null;
 	}
 
 	@Override
@@ -109,7 +103,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public Optional<Certificate> getById(long id) {
+	public Optional<Certificate> getById(Long id) {
 		SqlParameterSource params = new MapSqlParameterSource("id", id);
 		Certificate certificate = getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_BY_ID, params, new CertificateMapper())

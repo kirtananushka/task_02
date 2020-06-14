@@ -4,7 +4,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.mapper.TagMapper;
-import com.epam.esm.specification.TagSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -50,7 +50,7 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 		KeyHolder tagKeyHolder = new GeneratedKeyHolder();
 		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, tagKeyHolder);
-		return getById((long) tagKeyHolder.getKeys().get("id"));
+		return getById((Long) tagKeyHolder.getKeys().get("id"));
 	}
 
 	@Override
@@ -60,18 +60,13 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public Collection<Tag> query(TagSpecification specification) {
-		return null;
-	}
-
-	@Override
 	public Collection<Tag> getAll() {
 		return getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_ALL, new TagMapper());
 	}
 
 	@Override
-	public Optional<Tag> getById(long id) {
+	public Optional<Tag> getById(Long id) {
 		SqlParameterSource params = new MapSqlParameterSource("id", id);
 		Tag tag = getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_BY_ID, params, new TagMapper())
@@ -81,18 +76,9 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 		return Optional.of(tag);
 	}
 
-	public List<Tag> getTagsByCertificateId(long id) {
+	public List<Tag> getTagsByCertificateId(Long id) {
 		SqlParameterSource params = new MapSqlParameterSource("id", id);
 		return getNamedParameterJdbcTemplate().query(QUERY_GET_TAGS_BY_CERT, params, new TagMapper());
-	}
-
-	public long getTagByName(Tag tag) {
-		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
-		return getNamedParameterJdbcTemplate()
-						.query(QUERY_GET_TAG_BY_NAME, params, (resultSet, i) -> resultSet.getLong(1))
-						.stream()
-						.findAny()
-						.orElse(0L);
 	}
 
 	public void bindCertificateTag(Certificate certificate) {
@@ -101,15 +87,24 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 		SqlParameterSource tagParams;
 		SqlParameterSource linkageParams;
 		for (Tag tag : tagList) {
-			long tagId = getTagByName(tag);
-			if (tagId == 0) {
+			Long tagId = getTagByName(tag);
+			if (Objects.isNull(tagId)) {
 				tagParams = new MapSqlParameterSource("tag_name", tag.getName());
 				getNamedParameterJdbcTemplate().update(QUERY_ADD_TAGS, tagParams, tagKeyHolder);
-				tagId = (long) tagKeyHolder.getKeys().get("tags.id");
+				tagId = (Long) tagKeyHolder.getKeys().get("id");
 			}
 			linkageParams = new MapSqlParameterSource("cert_id", certificate.getId())
 							.addValue("tag_id", tagId);
 			getNamedParameterJdbcTemplate().update(QUERY_ADD_LINKAGE, linkageParams);
 		}
+	}
+
+	private Long getTagByName(Tag tag) {
+		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
+		return getNamedParameterJdbcTemplate()
+						.query(QUERY_GET_TAG_BY_NAME, params, (resultSet, i) -> resultSet.getLong(1))
+						.stream()
+						.findAny()
+						.orElse(null);
 	}
 }

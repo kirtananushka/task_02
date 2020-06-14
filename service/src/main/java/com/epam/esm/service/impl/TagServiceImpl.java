@@ -22,7 +22,7 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public Optional<Tag> getById(long id) {
+	public Optional<Tag> getById(Long id) {
 		return tagRepository.getById(id);
 	}
 
@@ -32,7 +32,7 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public void remove(long id) {
+	public void remove(Long id) {
 		if (getById(id).isPresent()) {
 			tagRepository.remove(getById(id).get());
 		}

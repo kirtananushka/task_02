@@ -11,7 +11,7 @@
 
     <properties>
         <jdk-version>11</jdk-version>
-        <java-version>${jdk-version}</java-version>
+        <java-version>11</java-version>
         <spring-version>5.2.6.RELEASE</spring-version>
         <sourceEncoding>UTF-8</sourceEncoding>
         <outputEncoding>UTF-8</outputEncoding>
@@ -26,29 +26,22 @@
     </properties>
 
     <dependencies>
-        <!-- Spring MVC and REST support -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring-version}</version>
         </dependency>
-
-        <!-- Spring JDBC -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring-version}</version>
         </dependency>
-
-        <!--Spring TEST-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>5.2.5.RELEASE</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Jackson for JSON converters -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -59,23 +52,16 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
-        <!-- Servlet support for
-                 Spring's AbstractAnnotationConfigDispatcherServletInitializer -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
         </dependency>
-
-        <!-- JSP -->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.3</version>
         </dependency>
-
-        <!-- Junit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -88,26 +74,31 @@
             <version>${org.junit.jupiter}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
         </dependency>
-
-        <!-- postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.12</version>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.13</version>
         </dependency>
     </dependencies>
 
