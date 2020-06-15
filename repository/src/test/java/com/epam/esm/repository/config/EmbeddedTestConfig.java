@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("com.epam.esm")
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:application.properties")
 public class EmbeddedTestConfig {
 
 	private Environment environment;
