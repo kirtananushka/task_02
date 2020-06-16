@@ -1,21 +1,19 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.ErrorMessage;
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.ModelMapper;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,7 +41,7 @@ public class CertificateServiceImpl implements CertificateService {
 			throw new ServiceException(
 							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + id);
 		}
-		return convertToCertificateDTO(certificateOptional.get());
+		return ModelMapper.convertToCertificateDTO(certificateOptional.get());
 	}
 
 	@Override
@@ -76,7 +74,7 @@ public class CertificateServiceImpl implements CertificateService {
 											+ certificateDTO.getDuration());
 		}
 		checkTags(certificateDTO);
-		Certificate certificate = convertToCertificate(certificateDTO).get();
+		Certificate certificate = ModelMapper.convertToCertificate(certificateDTO).get();
 		certificate.setCreationDate(LocalDate.now());
 		certificate.setModificationDate(null);
 		try {
@@ -89,7 +87,7 @@ public class CertificateServiceImpl implements CertificateService {
 			throw new ServiceException(
 							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED);
 		}
-		return convertToCertificateDTO(certificate);
+		return ModelMapper.convertToCertificateDTO(certificate);
 	}
 
 	@Override
@@ -128,7 +126,7 @@ public class CertificateServiceImpl implements CertificateService {
 							ErrorMessage.ERROR_INVALID_DURATION + certificateDTO.getDuration());
 		}
 		checkTags(certificateDTO);
-		Certificate certificate = convertToCertificate(certificateDTO).get();
+		Certificate certificate = ModelMapper.convertToCertificate(certificateDTO).get();
 		certificate.setModificationDate(LocalDate.now());
 		try {
 			certificate = certificateRepository.update(certificate).get();
@@ -138,7 +136,7 @@ public class CertificateServiceImpl implements CertificateService {
 		if (Objects.isNull(certificate)) {
 			throw new ServiceException(ErrorMessage.ERROR_CERTIFICATE_NOT_UPDATED);
 		}
-		return convertToCertificateDTO(certificate);
+		return ModelMapper.convertToCertificateDTO(certificate);
 	}
 
 	@Override
@@ -152,56 +150,6 @@ public class CertificateServiceImpl implements CertificateService {
 								ErrorMessage.ERROR_CERTIFICATE_NOT_DELETED, e);
 			}
 		}
-	}
-
-	private Optional<Certificate> convertToCertificate(CertificateDTO certificateDTO) {
-		Certificate certificate = new Certificate();
-		try {
-			certificate.setId(certificateDTO.getId());
-			certificate.setName(certificateDTO.getName());
-			certificate.setDescription(certificateDTO.getDescription());
-			certificate.setPrice(certificateDTO.getPrice());
-			certificate.setCreationDate(certificateDTO.getCreationDate());
-			certificate.setModificationDate(certificateDTO.getModificationDate());
-			certificate.setDuration(certificateDTO.getDuration());
-			List<Tag> tagList = new ArrayList<>();
-			for (TagDTO tagDTO : certificateDTO.getTags()) {
-				Tag tag = new Tag();
-				tag.setId(tagDTO.getId());
-				tag.setName(tagDTO.getName());
-				tagList.add(tag);
-			}
-			certificate.setTags(tagList);
-		} catch (Exception e) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
-		}
-		return Optional.of(certificate);
-	}
-
-	private Optional<CertificateDTO> convertToCertificateDTO(Certificate certificate) {
-		CertificateDTO certificateDTO = new CertificateDTO();
-		try {
-			certificateDTO.setId(certificate.getId());
-			certificateDTO.setName(certificate.getName());
-			certificateDTO.setDescription(certificate.getDescription());
-			certificateDTO.setPrice(certificate.getPrice());
-			certificateDTO.setCreationDate(certificate.getCreationDate());
-			certificateDTO.setModificationDate(certificate.getModificationDate());
-			certificateDTO.setDuration(certificate.getDuration());
-			List<TagDTO> tagDTOList = new ArrayList<>();
-			for (Tag tag : certificate.getTags()) {
-				TagDTO tagDTO = new TagDTO();
-				tagDTO.setId(tag.getId());
-				tagDTO.setName(tag.getName());
-				tagDTOList.add(tagDTO);
-			}
-			certificateDTO.setTags(tagDTOList);
-		} catch (Exception e) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
-		}
-		return Optional.of(certificateDTO);
 	}
 
 	private void checkTags(CertificateDTO certificateDTO) {

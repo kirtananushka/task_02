@@ -35,8 +35,8 @@ public class Validator {
 		return longNumber > 0;
 	}
 
-	public static boolean checkInt(int duration) {
-		return duration > 0;
+	public static boolean checkInt(int number) {
+		return number > 0;
 	}
 
 	public static boolean checkText(String text) {
