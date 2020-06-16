@@ -1,13 +1,22 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.ErrorMessage;
+import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.TagService;
+import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,34 +24,217 @@ import java.util.Optional;
 public class CertificateServiceImpl implements CertificateService {
 
 	private final CertificateRepository certificateRepository;
+	private final TagService tagService;
 
 	@Override
-	public Collection<Certificate> getAll() {
-		Collection<Certificate> list = certificateRepository.getAll();
-		return list;
+	public Optional<CertificateDTO> getById(Long id) {
+		if (!Validator.checkLong(id)) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + id);
+		}
+		Optional<Certificate> certificateOptional;
+		try {
+			certificateOptional = certificateRepository.getById(id);
+		} catch (Exception e) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + id, e);
+		}
+		if (certificateOptional.isEmpty()) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + id);
+		}
+		return convertToCertificateDTO(certificateOptional.get());
 	}
 
 	@Override
-	public Optional<Certificate> getById(Long id) {
-		return certificateRepository.getById(id);
-	}
-
-	@Override
-	public Optional<Certificate> save(Certificate certificate) {
+	public Optional<CertificateDTO> save(CertificateDTO certificateDTO) {
+		if (!Validator.checkLong(certificateDTO.getId())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
+		}
+		if (Objects.isNull(certificateDTO.getName()) || !Validator
+						.checkText(certificateDTO.getName())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
+											+ certificateDTO.getName().length());
+		}
+		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
+						.checkText(certificateDTO.getDescription())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
+											+ certificateDTO.getDescription().length());
+		}
+		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
+						.checkPrice(certificateDTO.getPrice().toString())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
+		}
+		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
+						.checkInt(certificateDTO.getDuration())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_DURATION
+											+ certificateDTO.getDuration());
+		}
+		checkTags(certificateDTO);
+		Certificate certificate = convertToCertificate(certificateDTO).get();
 		certificate.setCreationDate(LocalDate.now());
-		return certificateRepository.save(certificate);
+		certificate.setModificationDate(null);
+		try {
+			certificate = certificateRepository.save(certificate).get();
+		} catch (Exception e) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED, e);
+		}
+		if (Objects.isNull(certificate)) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED);
+		}
+		return convertToCertificateDTO(certificate);
 	}
 
 	@Override
-	public Optional<Certificate> update(Certificate certificate) {
+	public Optional<CertificateDTO> update(CertificateDTO certificateDTO) {
+		if (Objects.isNull(certificateDTO.getId()) || !Validator
+						.checkPositiveLong(certificateDTO.getId())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
+		}
+		try {
+			certificateRepository.getById(certificateDTO.getId()).isPresent();
+		} catch (Exception e) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + certificateDTO.getId());
+		}
+		if (Objects.isNull(certificateDTO.getName()) || !Validator
+						.checkText(certificateDTO.getName())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
+											+ certificateDTO.getName().length());
+		}
+		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
+						.checkText(certificateDTO.getDescription())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
+											+ certificateDTO.getDescription().length());
+		}
+		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
+						.checkPrice(certificateDTO.getPrice().toString())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
+		}
+		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
+						.checkInt(certificateDTO.getDuration())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_INVALID_DURATION + certificateDTO.getDuration());
+		}
+		checkTags(certificateDTO);
+		Certificate certificate = convertToCertificate(certificateDTO).get();
 		certificate.setModificationDate(LocalDate.now());
-		return certificateRepository.update(certificate);
+		try {
+			certificate = certificateRepository.update(certificate).get();
+		} catch (Exception e) {
+			throw new ServiceException(ErrorMessage.ERROR_CERTIFICATE_NOT_UPDATED, e);
+		}
+		if (Objects.isNull(certificate)) {
+			throw new ServiceException(ErrorMessage.ERROR_CERTIFICATE_NOT_UPDATED);
+		}
+		return convertToCertificateDTO(certificate);
 	}
 
 	@Override
 	public void remove(Long id) {
 		if (getById(id).isPresent()) {
-			certificateRepository.remove(getById(id).get());
+			try {
+				Optional<Certificate> certificateOptional = certificateRepository.getById(id);
+				certificateRepository.remove(certificateOptional.get());
+			} catch (Exception e) {
+				throw new ServiceException(
+								ErrorMessage.ERROR_CERTIFICATE_NOT_DELETED, e);
+			}
+		}
+	}
+
+	private Optional<Certificate> convertToCertificate(CertificateDTO certificateDTO) {
+		Certificate certificate = new Certificate();
+		try {
+			certificate.setId(certificateDTO.getId());
+			certificate.setName(certificateDTO.getName());
+			certificate.setDescription(certificateDTO.getDescription());
+			certificate.setPrice(certificateDTO.getPrice());
+			certificate.setCreationDate(certificateDTO.getCreationDate());
+			certificate.setModificationDate(certificateDTO.getModificationDate());
+			certificate.setDuration(certificateDTO.getDuration());
+			List<Tag> tagList = new ArrayList<>();
+			for (TagDTO tagDTO : certificateDTO.getTags()) {
+				Tag tag = new Tag();
+				tag.setId(tagDTO.getId());
+				tag.setName(tagDTO.getName());
+				tagList.add(tag);
+			}
+			certificate.setTags(tagList);
+		} catch (Exception e) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
+		}
+		return Optional.of(certificate);
+	}
+
+	private Optional<CertificateDTO> convertToCertificateDTO(Certificate certificate) {
+		CertificateDTO certificateDTO = new CertificateDTO();
+		try {
+			certificateDTO.setId(certificate.getId());
+			certificateDTO.setName(certificate.getName());
+			certificateDTO.setDescription(certificate.getDescription());
+			certificateDTO.setPrice(certificate.getPrice());
+			certificateDTO.setCreationDate(certificate.getCreationDate());
+			certificateDTO.setModificationDate(certificate.getModificationDate());
+			certificateDTO.setDuration(certificate.getDuration());
+			List<TagDTO> tagDTOList = new ArrayList<>();
+			for (Tag tag : certificate.getTags()) {
+				TagDTO tagDTO = new TagDTO();
+				tagDTO.setId(tag.getId());
+				tagDTO.setName(tag.getName());
+				tagDTOList.add(tagDTO);
+			}
+			certificateDTO.setTags(tagDTOList);
+		} catch (Exception e) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
+		}
+		return Optional.of(certificateDTO);
+	}
+
+	private void checkTags(CertificateDTO certificateDTO) {
+		if (certificateDTO.getTags().isEmpty()) {
+			return;
+		}
+		for (TagDTO tagDTO : certificateDTO.getTags()) {
+			if (Objects.isNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())) {
+				continue;
+			}
+			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())
+							&& !Validator.checkLong(tagDTO.getId())) {
+				throw new ServiceException(
+								ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
+			}
+			if (Objects.nonNull(tagDTO.getId()) && Objects.nonNull(tagDTO.getName())) {
+				if (!Validator.checkLong(tagDTO.getId())) {
+					throw new ServiceException(
+									ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
+				}
+				if (!Validator.checkText(tagDTO.getName())) {
+					throw new ServiceException(
+									ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName());
+				}
+				if (tagService.getById(tagDTO.getId()).isPresent()
+								&& !tagService.getById(tagDTO.getId()).get().getName().equals(tagDTO.getName())) {
+					throw new ServiceException(
+									ErrorMessage.ERROR_TAG_ID_NAME_NOT_RELEVANT + tagDTO.getId()
+													+ ErrorMessage.EXPECTED_NAME
+													+ tagService.getById(tagDTO.getId()).get().getName()
+													+ ErrorMessage.ERROR_NAME + tagDTO.getName());
+				}
+			}
 		}
 	}
 }

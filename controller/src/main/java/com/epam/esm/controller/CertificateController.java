@@ -1,9 +1,9 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.exception.EntityOperationException;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.dto.CertificateDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,32 +22,27 @@ public class CertificateController {
 	private final CertificateService certificateService;
 
 	@GetMapping("/certificates/{certificate_id}")
-	public Certificate getCertificate(@PathVariable Long certificate_id) {
-		return certificateService.getById(certificate_id)
-		                         .orElseThrow(EntityOperationException::new);
+	public CertificateDTO getCertificate(@PathVariable Long certificate_id) {
+		return certificateService.getById(certificate_id).get();
 	}
 
 	@PostMapping("/certificates")
-	public Certificate addCertificate(@RequestBody Certificate certificate,
-	                                  HttpServletResponse response) {
-		certificate.setId(0L);
-		response.setStatus(HttpServletResponse.SC_CREATED);
-		return certificateService.save(certificate)
-		                         .orElseThrow(EntityOperationException::new);
+	@ResponseStatus(HttpStatus.CREATED)
+	public CertificateDTO addCertificate(@RequestBody CertificateDTO certificateDTO) {
+		certificateDTO.setId(0L);
+		certificateDTO = certificateService.save(certificateDTO).get();
+		return certificateDTO;
 	}
 
 	@PutMapping("/certificates")
-	public Certificate updateCertificate(@RequestBody Certificate certificate) {
-		return certificateService.update(certificate)
-		                         .orElseThrow(EntityOperationException::new);
+	public CertificateDTO updateCertificate(@RequestBody CertificateDTO certificateDTO) {
+		certificateDTO = certificateService.update(certificateDTO).get();
+		return certificateDTO;
 	}
 
 	@DeleteMapping("/certificates/{certificate_id}")
-	public void removeCertificate(@PathVariable Long certificate_id, HttpServletResponse response) {
-		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-		if (certificateService.getById(certificate_id).isEmpty()) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void removeCertificate(@PathVariable Long certificate_id) {
 		certificateService.remove(certificate_id);
 	}
 }

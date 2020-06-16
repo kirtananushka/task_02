@@ -1,22 +1,19 @@
-package com.epam.esm.entity;
+package com.epam.esm.service.dto;
 
 import com.epam.esm.util.LocalDateDeserializer;
 import com.epam.esm.util.LocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Component
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Certificate extends Entity {
+public class CertificateDTO {
 
+	private Long id;
 	private String name;
 	private String description;
 	private BigDecimal price;
@@ -27,5 +24,5 @@ public class Certificate extends Entity {
 	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate modificationDate;
 	private int duration;
-	private List<Tag> tags;
+	private List<TagDTO> tags;
 }

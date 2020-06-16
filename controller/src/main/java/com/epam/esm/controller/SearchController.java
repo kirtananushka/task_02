@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.ParameterWrapper;
+import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

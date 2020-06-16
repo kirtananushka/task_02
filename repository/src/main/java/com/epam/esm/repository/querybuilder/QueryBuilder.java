@@ -1,6 +1,6 @@
 package com.epam.esm.repository.querybuilder;
 
-import com.epam.esm.entity.ParameterWrapper;
+import com.epam.esm.parameterwrapper.ParameterWrapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -14,7 +14,6 @@ public class QueryBuilder {
 					+ "certificates.id, certificates.name, description, price, creation_date, "
 					+ "modification_date, duration FROM certificates INNER JOIN (tags INNER JOIN "
 					+ "certificate_tag ON tags.id = tag_id) ON  certificates.id = certificate_id ";
-	public static final String CLAUSE_LIKE = "%';";
 	public static final String CLAUSE_TSQUERY = "');";
 	public static final String CLAUSE_STRING = "';";
 	public static final String SEMICOLON = ";";
@@ -22,7 +21,6 @@ public class QueryBuilder {
 	public static final String COMMA = ",";
 	public static final String EMPTINESS = "";
 	public static final String MINUS = "-";
-	public static final String PLUS = "\\+";
 	public static final String NOT = "NOT";
 	public static final String PATTERN_SORT = "[,\\-+]";
 	public static final String PATTERN_DATE = "[12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
@@ -129,11 +127,6 @@ public class QueryBuilder {
 					builder.append(ORDER)
 					       .append(element)
 					       .append(DESC);
-				} else {
-					element = element.replaceAll(PLUS, EMPTINESS);
-					builder.append(ORDER)
-					       .append(element)
-					       .append(SEMICOLON);
 				}
 			}
 		}

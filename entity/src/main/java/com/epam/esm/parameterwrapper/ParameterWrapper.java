@@ -1,4 +1,4 @@
-package com.epam.esm.entity;
+package com.epam.esm.parameterwrapper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

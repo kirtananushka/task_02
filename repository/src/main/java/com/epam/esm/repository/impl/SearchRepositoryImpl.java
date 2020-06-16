@@ -1,7 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.ParameterWrapper;
+import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.repository.SearchRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
 import com.epam.esm.repository.querybuilder.QueryBuilder;

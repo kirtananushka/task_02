@@ -10,11 +10,11 @@ drop TABLE IF EXISTS certificates;
 create table certificates (
     id                  bigserial       not null primary key,
     name                varchar(64)     not null,
-    description         text            not null,
+    description         varchar(64)     not null CHECK (price >= 0),
     price               numeric         not null,
     creation_date       date            not null default now(),
     modification_date   date,
-    duration            integer         not null);
+    duration            integer         not null CHECK (duration > 0));
 alter TABLE certificates OWNER to postgres;
 GRANT ALL ON TABLE certificates TO PUBLIC;
 -- -------------------------------------

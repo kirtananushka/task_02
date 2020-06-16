@@ -2,6 +2,8 @@ package com.epam.esm.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.ServletRegistration;
+
 public class DispatcherServletInitializer
 				extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -18,5 +20,10 @@ public class DispatcherServletInitializer
 	@Override
 	protected String[] getServletMappings() {
 		return new String[]{"/"};
+	}
+
+	@Override
+	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+		registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 	}
 }

@@ -22,23 +22,29 @@ import java.util.Optional;
 public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 				implements TagRepository {
 
+	public static final String TAG_NAME = "tag_name";
+	public static final String TAG_ID = "tag_id";
+	public static final String CERT_ID = "cert_id";
+	public static final String COLUMN_ID = "id";
 	public static final String QUERY_GET_BY_ID =
-					"SELECT id, name FROM tags WHERE id = :id";
+					"SELECT id, name FROM tags WHERE id = :tag_id";
 	public static final String QUERY_GET_ALL =
 					"SELECT id, name FROM tags ORDER BY id";
 	public static final String QUERY_ADD =
-					"INSERT INTO tags (name) VALUES (:name);";
+					"INSERT INTO tags (name) VALUES (:tag_name);";
 	public static final String QUERY_REMOVE =
-					"DELETE FROM tags WHERE id = :id;";
+					"DELETE FROM tags WHERE id = :tag_id;";
 	public static final String QUERY_GET_TAGS_BY_CERT =
 					"SELECT tags.id, tags.name FROM tags INNER JOIN certificate_tag ON tags.id = tag_id"
-									+ " WHERE certificate_id = :id;";
+									+ " WHERE certificate_id = :cert_id;";
 	public static final String QUERY_ADD_TAGS =
 					"INSERT INTO tags (name) VALUES (:tag_name);";
 	public static final String QUERY_ADD_LINKAGE =
 					"INSERT INTO certificate_tag (certificate_id, tag_id) VALUES (:cert_id, :tag_id);";
 	public static final String QUERY_GET_TAG_BY_NAME =
-					"SELECT id FROM tags WHERE name = :name";
+					"SELECT id FROM tags WHERE name = :tag_name";
+	public static final String QUERY_GET_NAME_BY_ID =
+					"SELECT name FROM tags WHERE id = :tag_id";
 
 	@Autowired
 	public TagRepositoryImpl(DataSource dataSource) {
@@ -48,14 +54,14 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 	@Override
 	public Optional<Tag> save(Tag tag) {
 		KeyHolder tagKeyHolder = new GeneratedKeyHolder();
-		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
+		SqlParameterSource params = new MapSqlParameterSource(TAG_NAME, tag.getName());
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, tagKeyHolder);
-		return getById((Long) tagKeyHolder.getKeys().get("id"));
+		return getById((Long) tagKeyHolder.getKeys().get(COLUMN_ID));
 	}
 
 	@Override
 	public void remove(Tag tag) {
-		SqlParameterSource params = new MapSqlParameterSource("id", tag.getId());
+		SqlParameterSource params = new MapSqlParameterSource(TAG_ID, tag.getId());
 		getNamedParameterJdbcTemplate().update(QUERY_REMOVE, params);
 	}
 
@@ -67,7 +73,7 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 
 	@Override
 	public Optional<Tag> getById(Long id) {
-		SqlParameterSource params = new MapSqlParameterSource("id", id);
+		SqlParameterSource params = new MapSqlParameterSource(TAG_ID, id);
 		Tag tag = getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_BY_ID, params, new TagMapper())
 						.stream()
@@ -77,7 +83,7 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	public List<Tag> getTagsByCertificateId(Long id) {
-		SqlParameterSource params = new MapSqlParameterSource("id", id);
+		SqlParameterSource params = new MapSqlParameterSource(CERT_ID, id);
 		return getNamedParameterJdbcTemplate().query(QUERY_GET_TAGS_BY_CERT, params, new TagMapper());
 	}
 
@@ -87,22 +93,29 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 		SqlParameterSource tagParams;
 		SqlParameterSource linkageParams;
 		for (Tag tag : tagList) {
-			Long tagId = getTagByName(tag);
-			if (Objects.isNull(tagId)) {
-				tagParams = new MapSqlParameterSource("tag_name", tag.getName());
-				getNamedParameterJdbcTemplate().update(QUERY_ADD_TAGS, tagParams, tagKeyHolder);
-				tagId = (Long) tagKeyHolder.getKeys().get("id");
+			Long tagId = tag.getId();
+			String tagName = tag.getName();
+			if (Objects.isNull(tagId) && Objects.isNull(tagName)) {
+				continue;
 			}
-			linkageParams = new MapSqlParameterSource("cert_id", certificate.getId())
-							.addValue("tag_id", tagId);
+			if (Objects.isNull(tagId) || Objects.isNull(getTagNameById(tag))) {
+				if (Objects.isNull(tagName)) {
+					tagName = "New tag instead of the missing tag with id " + tagId;
+				}
+				tagParams = new MapSqlParameterSource(TAG_NAME, tagName);
+				getNamedParameterJdbcTemplate().update(QUERY_ADD_TAGS, tagParams, tagKeyHolder);
+				tagId = (Long) tagKeyHolder.getKeys().get(COLUMN_ID);
+			}
+			linkageParams = new MapSqlParameterSource(CERT_ID, certificate.getId())
+							.addValue(TAG_ID, tagId);
 			getNamedParameterJdbcTemplate().update(QUERY_ADD_LINKAGE, linkageParams);
 		}
 	}
 
-	private Long getTagByName(Tag tag) {
-		SqlParameterSource params = new MapSqlParameterSource("name", tag.getName());
+	private String getTagNameById(Tag tag) {
+		SqlParameterSource params = new MapSqlParameterSource(TAG_ID, tag.getId());
 		return getNamedParameterJdbcTemplate()
-						.query(QUERY_GET_TAG_BY_NAME, params, (resultSet, i) -> resultSet.getLong(1))
+						.query(QUERY_GET_NAME_BY_ID, params, (resultSet, i) -> resultSet.getString(1))
 						.stream()
 						.findAny()
 						.orElse(null);

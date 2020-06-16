@@ -12,6 +12,6 @@ import lombok.Setter;
 public class EntityErrorResponse {
 
 	private int status;
-	private String description;
+	private String error;
 	private String message;
 }
