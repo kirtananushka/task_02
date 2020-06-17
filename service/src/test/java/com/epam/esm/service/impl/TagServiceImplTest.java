@@ -4,29 +4,24 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.config.ServiceTestConfig;
 import com.epam.esm.service.dto.TagDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {ServiceTestConfig.class})
+@ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
 	private static Tag tagFirst;
@@ -34,13 +29,14 @@ class TagServiceImplTest {
 	private static TagDTO tagFirstDTO;
 	private static TagDTO tagSecondDTO;
 	private static List<Tag> tagList;
-	@Autowired
+	@Mock
 	private TagRepository tagRepository;
-	@Autowired
+	@Mock
 	private TagService tagService;
 
 	@BeforeEach
 	void setup() {
+		tagService = new TagServiceImpl(tagRepository);
 		tagFirst = new Tag();
 		tagFirst.setId(1L);
 		tagFirst.setName("First tag");
@@ -95,7 +91,7 @@ class TagServiceImplTest {
 
 	@Test
 	void save() {
-		when(tagRepository.save(tagSecond)).thenReturn(Optional.of(tagSecond));
+		when(tagRepository.save(any())).thenReturn(Optional.of(tagSecond));
 		Optional<TagDTO> optionalTagDTO = tagService.save(tagSecondDTO);
 		TagDTO tagDTO = optionalTagDTO.get();
 		Assertions.assertEquals(tagSecond.getId(), tagDTO.getId());
@@ -116,7 +112,6 @@ class TagServiceImplTest {
 
 	@Test
 	void saveWithException() {
-		when(tagRepository.save(tagFirst)).thenThrow(RuntimeException.class);
 		Assertions.assertThrows(ServiceException.class, () -> tagService.save(tagFirstDTO));
 	}
 
