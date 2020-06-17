@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -33,7 +34,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 	public static final String QUERY_UPDATE =
 					"UPDATE certificates\n"
 									+ "SET name = :name, description = :description, price = :price,\n"
-									+ "creation_date = :creation_date, modification_date = :modification_date,\n"
+									+ "modification_date = :modification_date,\n"
 									+ "duration = :duration WHERE certificates.id = :id;";
 	public static final String QUERY_REMOVE =
 					"DELETE FROM certificates WHERE id = :id;";
@@ -64,7 +65,9 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 		getNamedParameterJdbcTemplate().update(QUERY_ADD, params, certKeyHolder);
 		Long certId = (Long) certKeyHolder.getKeys().get("id");
 		certificate.setId(certId);
-		tagRepository.bindCertificateTag(certificate);
+		if (Objects.nonNull(certificate.getTags())) {
+			tagRepository.bindCertificateTag(certificate);
+		}
 		return getById(certId);
 	}
 
@@ -81,7 +84,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("name", certificate.getName())
 						.addValue("description", certificate.getDescription())
 						.addValue("price", certificate.getPrice())
-						.addValue("creation_date", certificate.getCreationDate())
+						//.addValue("creation_date", certificate.getCreationDate())
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_UPDATE, params, keyHolder);

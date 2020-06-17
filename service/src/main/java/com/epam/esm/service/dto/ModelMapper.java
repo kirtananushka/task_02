@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -24,11 +25,13 @@ public class ModelMapper {
 			certificate.setModificationDate(certificateDTO.getModificationDate());
 			certificate.setDuration(certificateDTO.getDuration());
 			List<Tag> tagList = new ArrayList<>();
-			for (TagDTO tagDTO : certificateDTO.getTags()) {
-				Tag tag = new Tag();
-				tag.setId(tagDTO.getId());
-				tag.setName(tagDTO.getName());
-				tagList.add(tag);
+			if (Objects.nonNull(certificateDTO.getTags())) {
+				for (TagDTO tagDTO : certificateDTO.getTags()) {
+					Tag tag = new Tag();
+					tag.setId(tagDTO.getId());
+					tag.setName(tagDTO.getName());
+					tagList.add(tag);
+				}
 			}
 			certificate.setTags(tagList);
 		} catch (Exception e) {

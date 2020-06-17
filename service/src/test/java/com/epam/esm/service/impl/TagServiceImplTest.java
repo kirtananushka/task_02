@@ -12,7 +12,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -58,7 +60,7 @@ class TagServiceImplTest {
 
 	@Test
 	void getAll() {
-		Mockito.when(tagRepository.getAll()).thenReturn(tagList);
+		when(tagRepository.getAll()).thenReturn(tagList);
 		Collection<TagDTO> tagDTOCollection = tagService.getAll();
 		List<TagDTO> tagDTOList = new ArrayList<>(tagDTOCollection);
 		Assertions.assertEquals(2, tagDTOList.size());
@@ -67,7 +69,7 @@ class TagServiceImplTest {
 
 	@Test
 	void getById() {
-		Mockito.when(tagRepository.getById(tagFirst.getId())).thenReturn(Optional.of(tagFirst));
+		when(tagRepository.getById(anyLong())).thenReturn(Optional.of(tagFirst));
 		Optional<TagDTO> optionalTagDTO = tagService.getById(tagFirst.getId());
 		TagDTO tagDTO = optionalTagDTO.get();
 		Assertions.assertEquals(tagFirst.getId(), tagDTO.getId());
@@ -81,19 +83,19 @@ class TagServiceImplTest {
 
 	@Test
 	void getByIncorrectId() {
-		Mockito.when(tagRepository.getById(3L)).thenReturn(Optional.empty());
+		when(tagRepository.getById(anyLong())).thenReturn(Optional.empty());
 		Assertions.assertThrows(ServiceException.class, () -> tagService.getById(3L));
 	}
 
 	@Test
 	void getByIdGetWithException() {
-		Mockito.when(tagRepository.getById(3L)).thenThrow(RuntimeException.class);
+		when(tagRepository.getById(anyLong())).thenThrow(RuntimeException.class);
 		Assertions.assertThrows(ServiceException.class, () -> tagService.getById(3L));
 	}
 
 	@Test
 	void save() {
-		Mockito.when(tagRepository.save(tagSecond)).thenReturn(Optional.of(tagSecond));
+		when(tagRepository.save(tagSecond)).thenReturn(Optional.of(tagSecond));
 		Optional<TagDTO> optionalTagDTO = tagService.save(tagSecondDTO);
 		TagDTO tagDTO = optionalTagDTO.get();
 		Assertions.assertEquals(tagSecond.getId(), tagDTO.getId());
@@ -114,7 +116,7 @@ class TagServiceImplTest {
 
 	@Test
 	void saveWithException() {
-		Mockito.when(tagRepository.save(tagFirst)).thenThrow(RuntimeException.class);
+		when(tagRepository.save(tagFirst)).thenThrow(RuntimeException.class);
 		Assertions.assertThrows(ServiceException.class, () -> tagService.save(tagFirstDTO));
 	}
 

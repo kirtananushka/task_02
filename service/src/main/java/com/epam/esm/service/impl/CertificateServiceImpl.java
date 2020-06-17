@@ -77,12 +77,18 @@ public class CertificateServiceImpl implements CertificateService {
 		Certificate certificate = ModelMapper.convertToCertificate(certificateDTO).get();
 		certificate.setCreationDate(LocalDate.now());
 		certificate.setModificationDate(null);
+		Optional<Certificate> optionalCertificate;
 		try {
-			certificate = certificateRepository.save(certificate).get();
+			optionalCertificate = certificateRepository.save(certificate);
 		} catch (Exception e) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED, e);
 		}
+		if (optionalCertificate.isEmpty()) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED);
+		}
+		certificate = optionalCertificate.get();
 		if (Objects.isNull(certificate)) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_CERTIFICATE_NOT_CREATED);
@@ -153,6 +159,9 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	private void checkTags(CertificateDTO certificateDTO) {
+		if (Objects.isNull(certificateDTO.getTags())) {
+			return;
+		}
 		if (certificateDTO.getTags().isEmpty()) {
 			return;
 		}
