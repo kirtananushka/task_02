@@ -14,8 +14,8 @@ public class Validator {
 
 	private static final char DECIMAL_SEPARATOR = '.';
 	private static final String MONEY_DECIMAL_FORMAT = "#0.00";
-	private static final String DECIMAL_PATTERN = "\\d+\\.\\d\\d";
-	private static final String INTEGER_PATTERN = "\\d+";
+	private static final String DECIMAL_PATTERN = "\\d{1,8}\\.\\d\\d";
+	private static final String INTEGER_PATTERN = "\\d{1,8}";
 	private static final String NON_DIGITS_PATTERN = "\\D";
 	private static final String DATE_PATTERN = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";
 	private static final String SORTING_PATTERN = "[\\-]?[a-z_.]+";

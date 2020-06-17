@@ -5,30 +5,26 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.ServiceException;
-import com.epam.esm.service.config.ServiceTestConfig;
+import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.CertificateDTO;
 import com.epam.esm.service.dto.TagDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {ServiceTestConfig.class})
+@ExtendWith(MockitoExtension.class)
 class CertificateServiceImplTest {
 
 	private static Tag tag;
@@ -39,13 +35,15 @@ class CertificateServiceImplTest {
 	private static CertificateDTO certificateSecondDTO;
 	private static List<Tag> tagList;
 	private static List<TagDTO> tagListDTO;
-	@Autowired
-	private CertificateRepository certificateRepository;
-	@Autowired
 	private CertificateService certificateService;
+	@Mock
+	private CertificateRepository certificateRepository;
+	@Mock
+	private TagService tagService;
 
 	@BeforeEach
 	void setup() {
+		certificateService = new CertificateServiceImpl(certificateRepository, tagService);
 		tag = new Tag();
 		tag.setId(1L);
 		tag.setName("First tag");
@@ -86,11 +84,8 @@ class CertificateServiceImplTest {
 
 	@Test
 	void getById() {
-		when(certificateRepository.getById(certificateFirst.getId()))
-						.thenReturn(Optional.of(certificateFirst));
-		Optional<CertificateDTO> optionalCertificateDTO =
-						certificateService.getById(certificateFirst.getId());
-		CertificateDTO certificateDTO = optionalCertificateDTO.get();
+		when(certificateRepository.getById(anyLong())).thenReturn(Optional.of(certificateFirst));
+		CertificateDTO certificateDTO = certificateService.getById(certificateFirst.getId()).get();
 		Assertions.assertEquals(certificateFirst.getId(), certificateDTO.getId());
 		Assertions.assertEquals(certificateFirst.getName(), certificateDTO.getName());
 	}
@@ -113,8 +108,20 @@ class CertificateServiceImplTest {
 	}
 
 	@Test
+	void save() {
+		when(certificateRepository.save(any())).thenReturn(Optional.of(certificateSecond));
+		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
+	}
+
+	@Test
+	void update() {
+		when(certificateRepository.update(any())).thenReturn(Optional.of(certificateSecond));
+		Assertions.assertNotNull(certificateService.update(certificateSecondDTO).get());
+	}
+
+	@Test
 	void saveWithException() {
-		when(certificateRepository.update(certificateSecond)).thenReturn(null);
+		when(certificateRepository.save(certificateSecond)).thenReturn(null);
 		Assertions.assertThrows(ServiceException.class,
 						() -> certificateService.save(certificateSecondDTO));
 	}
@@ -203,19 +210,6 @@ class CertificateServiceImplTest {
 		Assertions.assertThrows(ServiceException.class,
 						() -> certificateService.update(certificateFirstDTO));
 	}
-
-	@Test
-	void save() {
-		when(certificateRepository.save(certificateSecond)).thenReturn(Optional.of
-						(certificateSecond));
-		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
-	}
-	//	@Test
-//	void update() {
-//		when(certificateRepository.update(certificateSecond)).thenReturn(Optional.of
-//		(certificateSecond));
-//		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
-//	}
 
 	@Test
 	void removeIncorrectId() {
