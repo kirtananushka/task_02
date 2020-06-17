@@ -29,12 +29,12 @@ public class ServiceTestConfig {
 
 	@Bean
 	public CertificateServiceImpl certificateService() {
-		return new CertificateServiceImpl(certificateRepository(), tagService(), validator());
+		return new CertificateServiceImpl(certificateRepository(), tagService());
 	}
 
 	@Bean
 	public TagServiceImpl tagService() {
-		return new TagServiceImpl(tagRepository(), validator());
+		return new TagServiceImpl(tagRepository());
 	}
 }
 

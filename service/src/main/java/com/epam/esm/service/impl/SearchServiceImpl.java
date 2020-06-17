@@ -18,43 +18,42 @@ import java.util.Objects;
 public class SearchServiceImpl implements SearchService {
 
 	private final SearchRepository searchRepository;
-	private final Validator validator;
 
 	@Override
 	public Collection<Certificate> search(ParameterWrapper params) {
 		if (Objects.nonNull(params.getPrice())
-						&& !validator.checkPriceQuery(params.getPrice())) {
+						&& !Validator.checkPriceQuery(params.getPrice())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PRICE_EXPR + params.getPrice());
 		}
 		if (Objects.nonNull(params.getCreationDate())
-						&& !validator.checkDateQuery(params.getCreationDate())) {
+						&& !Validator.checkDateQuery(params.getCreationDate())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_CREATION_DATE_EXPR + params.getCreationDate());
 		}
 		if (Objects.nonNull(params.getModificationDate())
-						&& !validator.checkDateQuery(params.getModificationDate())) {
+						&& !Validator.checkDateQuery(params.getModificationDate())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_MODIFICATION_DATE_EXPR + params.getModificationDate());
 		}
 		if (Objects.nonNull(params.getDuration())
-						&& !validator.checkIntegerQuery(params.getDuration())) {
+						&& !Validator.checkIntegerQuery(params.getDuration())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_DURATION_EXPR + params.getDuration());
 		}
 		if (Objects.nonNull(params.getPage())
-						&& !validator.checkIntegerQuery(params.getPage())) {
+						&& !Validator.checkIntegerQuery(params.getPage())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PAGE + params.getPage());
 		}
 		if (Objects.nonNull(params.getPerPage())
-						&& !validator.checkIntegerQuery(params.getPerPage())) {
+						&& !Validator.checkIntegerQuery(params.getPerPage())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PER_PAGE + params.getPerPage());
 		}
 		if (Objects.nonNull(params.getSortBy())) {
 			for (String param : params.getSortBy().split(",")) {
-				if (!validator.checkSortBy(param)) {
+				if (!Validator.checkSortBy(param)) {
 					throw new ServiceException(
 									ErrorMessage.ERROR_INCORRECT_PARAM_SORTING + param);
 				}
