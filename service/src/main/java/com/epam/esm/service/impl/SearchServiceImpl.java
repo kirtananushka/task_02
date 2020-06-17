@@ -1,11 +1,12 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.entity.Certificate;
 import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.repository.SearchRepository;
 import com.epam.esm.service.ErrorMessage;
 import com.epam.esm.service.SearchService;
 import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.ModelMapper;
 import com.epam.esm.service.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class SearchServiceImpl implements SearchService {
 	private final SearchRepository searchRepository;
 
 	@Override
-	public Collection<Certificate> search(ParameterWrapper params) {
+	public Collection<CertificateDTO> search(ParameterWrapper params) {
 		if (Objects.nonNull(params.getPrice())
 						&& !Validator.checkPriceQuery(params.getPrice())) {
 			throw new ServiceException(
@@ -66,6 +69,10 @@ public class SearchServiceImpl implements SearchService {
 				}
 			}
 		}
-		return searchRepository.search(params);
+		return searchRepository.search(params)
+		                       .stream()
+		                       .map(ModelMapper::convertToCertificateDTO)
+		                       .map(Optional::get)
+		                       .collect(Collectors.toList());
 	}
 }
