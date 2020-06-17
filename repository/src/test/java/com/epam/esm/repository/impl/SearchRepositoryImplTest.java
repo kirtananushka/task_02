@@ -3,7 +3,7 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.repository.SearchRepository;
-import com.epam.esm.repository.config.EmbeddedTestConfig;
+import com.epam.esm.repository.config.RepositoryTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {EmbeddedTestConfig.class})
+@ContextConfiguration(classes = {RepositoryTestConfig.class})
 class SearchRepositoryImplTest {
 
 	@Autowired
@@ -573,20 +573,8 @@ class SearchRepositoryImplTest {
 		params.setSortBy("name,description,price,creation_date,modification_date,duration");
 		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
 		Assertions.assertEquals(10, result.size());
-		Assertions.assertEquals(8L, result.get(0).getId());
-		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
-	}
-
-	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
-	void sortByAllParamsAsc() {
-		ParameterWrapper params = new ParameterWrapper();
-		params.setSortBy("+name,+description,+price,+creation_date,+modification_date,+duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
-		Assertions.assertEquals(10, result.size());
-		Assertions.assertEquals(8L, result.get(0).getId());
-		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
+		Assertions.assertEquals(9L, result.get(0).getId());
+		Assertions.assertEquals(3L, result.get(result.size() - 1).getId());
 	}
 
 	@Test
@@ -606,11 +594,11 @@ class SearchRepositoryImplTest {
 	@Sql("/db.test/test_inserts.sql")
 	void sortByAllParamsMixed() {
 		ParameterWrapper params = new ParameterWrapper();
-		params.setSortBy("name,+description,-price,creation_date,-modification_date,+duration");
+		params.setSortBy("name,description,-price,creation_date,-modification_date,duration");
 		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
 		Assertions.assertEquals(10, result.size());
-		Assertions.assertEquals(8L, result.get(0).getId());
-		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
+		Assertions.assertEquals(10L, result.get(0).getId());
+		Assertions.assertEquals(7L, result.get(result.size() - 1).getId());
 	}
 
 	@Test
@@ -618,10 +606,10 @@ class SearchRepositoryImplTest {
 	@Sql("/db.test/test_inserts.sql")
 	void sortByAllParamsMixed2() {
 		ParameterWrapper params = new ParameterWrapper();
-		params.setSortBy("+price,-name,+description,-creation_date,modification_date,-duration");
+		params.setSortBy("price,-name,description,-creation_date,modification_date,-duration");
 		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
 		Assertions.assertEquals(10, result.size());
-		Assertions.assertEquals(7L, result.get(0).getId());
-		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
+		Assertions.assertEquals(1L, result.get(0).getId());
+		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
 	}
 }

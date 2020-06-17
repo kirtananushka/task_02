@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:application.properties")
-public class EmbeddedTestConfig {
+public class RepositoryTestConfig {
 
 	private Environment environment;
 

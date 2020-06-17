@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("com.epam.esm")
 public class RepositorySpringConfig {
+
 	@Bean
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig("/hicari.properties");

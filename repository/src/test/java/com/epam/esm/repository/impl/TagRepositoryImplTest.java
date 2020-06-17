@@ -1,7 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.config.EmbeddedTestConfig;
+import com.epam.esm.repository.config.RepositoryTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {EmbeddedTestConfig.class})
+@ContextConfiguration(classes = {RepositoryTestConfig.class})
 class TagRepositoryImplTest {
 
 	private static final Tag tag;

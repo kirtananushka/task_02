@@ -27,23 +27,23 @@ public class Validator {
 	private static final List<String> sortParams = Arrays.asList("certificates.id", "name",
 					"description", "price", "creation_date", "modification_date", "duration");
 
-	public static boolean checkLong(Long longNumber) {
+	public boolean checkLong(Long longNumber) {
 		return longNumber >= 0;
 	}
 
-	public static boolean checkPositiveLong(Long longNumber) {
+	public boolean checkPositiveLong(Long longNumber) {
 		return longNumber > 0;
 	}
 
-	public static boolean checkInt(int number) {
+	public boolean checkInt(int number) {
 		return number > 0;
 	}
 
-	public static boolean checkText(String text) {
-		return !(text.length() == 0 || text.length() >= 64);
+	public boolean checkText(String text) {
+		return (text.length() > 0 && text.length() <= 64);
 	}
 
-	public static boolean checkPrice(String price) {
+	public boolean checkPrice(String price) {
 		if (!price.matches(DECIMAL_PATTERN)) {
 			return false;
 		}
@@ -59,20 +59,20 @@ public class Validator {
 		return true;
 	}
 
-	public static boolean checkPriceQuery(String price) {
+	public boolean checkPriceQuery(String price) {
 		return checkQuery(price, DECIMAL_PATTERN);
 	}
 
-	public static boolean checkDateQuery(String date) {
+	public boolean checkDateQuery(String date) {
 		return checkQuery(date, DATE_PATTERN);
 	}
 
-	public static boolean checkIntegerQuery(String duration) {
+	public boolean checkIntegerQuery(String duration) {
 		return checkStrInteger(duration) &&
 						checkQuery(duration, INTEGER_PATTERN);
 	}
 
-	public static boolean checkSortBy(String param) {
+	public boolean checkSortBy(String param) {
 		param = param.toLowerCase().strip();
 		if (!param.matches(SORTING_PATTERN)) {
 			return false;
@@ -81,7 +81,7 @@ public class Validator {
 		return sortParams.contains(param);
 	}
 
-	private static boolean checkQuery(String query, String pattern) {
+	private boolean checkQuery(String query, String pattern) {
 		query = query.toUpperCase();
 		return query.matches(pattern) ||
 						query.matches(GREATER_OR_LESS + pattern) ||
@@ -90,7 +90,7 @@ public class Validator {
 						query.matches(NOT + BETWEEN + pattern + AND + pattern);
 	}
 
-	private static boolean checkStrInteger(String strInteger) {
+	private boolean checkStrInteger(String strInteger) {
 		if (!NumberUtils.isCreatable(strInteger)) {
 			return false;
 		}
