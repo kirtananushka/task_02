@@ -12,6 +12,7 @@ import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CertificateServiceImpl implements CertificateService {
 
 	private final CertificateRepository certificateRepository;
@@ -173,6 +175,10 @@ public class CertificateServiceImpl implements CertificateService {
 							&& !Validator.checkLong(tagDTO.getId())) {
 				throw new ServiceException(
 								ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
+			}
+			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())) {
+				throw new ServiceException(
+								ErrorMessage.ERROR_ADD_TAG_WITHOUT_NAME + tagDTO.getId());
 			}
 			if (Objects.nonNull(tagDTO.getId()) && Objects.nonNull(tagDTO.getName())) {
 				if (!Validator.checkLong(tagDTO.getId())) {

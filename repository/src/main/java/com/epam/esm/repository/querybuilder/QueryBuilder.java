@@ -22,7 +22,7 @@ public class QueryBuilder {
 	public static final String EMPTINESS = "";
 	public static final String MINUS = "-";
 	public static final String NOT = "NOT";
-	public static final String PATTERN_SORT = "[,\\-+]";
+	public static final String PATTERN_SORT = "[,-]";
 	public static final String PATTERN_DATE = "[12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
 	public static final String PATTERN_DIGIT = "\\d+";
 	public static final String NAME = "WHERE to_tsvector(certificates.name) @@ plainto_tsquery('";
@@ -32,6 +32,7 @@ public class QueryBuilder {
 	public static final String MODIFICATION_DATE = "modification_date";
 	public static final String DURATION = "WHERE duration=";
 	public static final String TAG = "WHERE tags.name='";
+	public static final String TAG_ID = "WHERE tags.id=";
 	public static final String ORDER = "ORDER BY ";
 	public static final String DESC = " DESC;";
 	public static final String RE_WHERE = ";WHERE ";
@@ -103,9 +104,14 @@ public class QueryBuilder {
 			       .append(params.getDuration().toUpperCase())
 			       .append(SEMICOLON);
 		}
-		if (Objects.nonNull(params.getTag())) {
+		if (Objects.nonNull(params.getTagId())) {
+			builder.append(TAG_ID)
+			       .append(params.getTagId().toUpperCase())
+			       .append(SEMICOLON);
+		}
+		if (Objects.nonNull(params.getTagName())) {
 			builder.append(TAG)
-			       .append(params.getTag())
+			       .append(params.getTagName())
 			       .append(CLAUSE_STRING);
 		}
 		return builder;
@@ -127,6 +133,10 @@ public class QueryBuilder {
 					builder.append(ORDER)
 					       .append(element)
 					       .append(DESC);
+				} else {
+					builder.append(ORDER)
+					       .append(element)
+					       .append(SEMICOLON);
 				}
 			}
 		}

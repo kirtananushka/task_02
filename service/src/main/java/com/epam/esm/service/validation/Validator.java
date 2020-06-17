@@ -14,8 +14,9 @@ public class Validator {
 
 	private static final char DECIMAL_SEPARATOR = '.';
 	private static final String MONEY_DECIMAL_FORMAT = "#0.00";
-	private static final String DECIMAL_PATTERN = "\\d+.?\\d*";
+	private static final String DECIMAL_PATTERN = "\\d+\\.\\d\\d";
 	private static final String INTEGER_PATTERN = "\\d+";
+	private static final String NON_DIGITS_PATTERN = "\\D";
 	private static final String DATE_PATTERN = "\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d";
 	private static final String SORTING_PATTERN = "[\\-]?[a-z_.]+";
 	private static final String MINUS = "\\-";
@@ -44,7 +45,7 @@ public class Validator {
 	}
 
 	public static boolean checkPrice(String price) {
-		if (!price.matches(DECIMAL_PATTERN)) {
+		if (!price.matches(DECIMAL_PATTERN) && !price.matches(INTEGER_PATTERN)) {
 			return false;
 		}
 		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -60,16 +61,17 @@ public class Validator {
 	}
 
 	public static boolean checkPriceQuery(String price) {
-		return checkQuery(price, DECIMAL_PATTERN);
+		return checkQuery(price, DECIMAL_PATTERN) || checkQuery(price, INTEGER_PATTERN);
 	}
 
 	public static boolean checkDateQuery(String date) {
 		return checkQuery(date, DATE_PATTERN);
 	}
 
-	public static boolean checkIntegerQuery(String duration) {
-		return checkStrInteger(duration) &&
-						checkQuery(duration, INTEGER_PATTERN);
+	public static boolean checkIntegerQuery(String intExpr) {
+		String digitals = intExpr.replaceAll(NON_DIGITS_PATTERN, "");
+		return checkStrInteger(digitals) &&
+						checkQuery(intExpr, INTEGER_PATTERN);
 	}
 
 	public static boolean checkSortBy(String param) {

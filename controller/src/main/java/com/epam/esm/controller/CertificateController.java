@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/certificates")
 public class CertificateController {
 
 	private final CertificateService certificateService;
 
-	@GetMapping("/certificates/{certificate_id}")
-	public CertificateDTO getCertificate(@PathVariable Long certificate_id) {
-		return certificateService.getById(certificate_id).get();
+	@GetMapping("/{id}")
+	public CertificateDTO getCertificate(@PathVariable Long id) {
+		return certificateService.getById(id).get();
 	}
 
-	@PostMapping("/certificates")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CertificateDTO addCertificate(@RequestBody CertificateDTO certificateDTO) {
 		certificateDTO.setId(0L);
@@ -34,15 +34,15 @@ public class CertificateController {
 		return certificateDTO;
 	}
 
-	@PutMapping("/certificates")
+	@PutMapping
 	public CertificateDTO updateCertificate(@RequestBody CertificateDTO certificateDTO) {
 		certificateDTO = certificateService.update(certificateDTO).get();
 		return certificateDTO;
 	}
 
-	@DeleteMapping("/certificates/{certificate_id}")
+	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void removeCertificate(@PathVariable Long certificate_id) {
-		certificateService.remove(certificate_id);
+	public void removeCertificate(@PathVariable Long id) {
+		certificateService.remove(id);
 	}
 }

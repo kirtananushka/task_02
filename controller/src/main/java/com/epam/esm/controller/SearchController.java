@@ -13,12 +13,12 @@ import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/certificates")
 public class SearchController {
 
 	private final SearchService searchService;
 
-	@GetMapping("/certificates")
+	@GetMapping
 	public Collection<Certificate> query(
 					@RequestParam(value = "name", required = false) String name,
 					@RequestParam(value = "description", required = false) String description,
@@ -26,7 +26,8 @@ public class SearchController {
 					@RequestParam(value = "creation_date", required = false) String creationDate,
 					@RequestParam(value = "modification_date", required = false) String modificationDate,
 					@RequestParam(value = "duration", required = false) String duration,
-					@RequestParam(value = "tag", required = false) String tag,
+					@RequestParam(value = "tag_name", required = false) String tagName,
+					@RequestParam(value = "tag_id", required = false) String tagId,
 					@RequestParam(value = "sort", required = false, defaultValue = "certificates.id") String sortBy,
 					@RequestParam(value = "per_page", required = false, defaultValue = "10") String perPage,
 					@RequestParam(value = "page", required = false) String page) {
@@ -37,7 +38,8 @@ public class SearchController {
 		params.setCreationDate(creationDate);
 		params.setModificationDate(modificationDate);
 		params.setDuration(duration);
-		params.setTag(tag);
+		params.setTagName(tagName);
+		params.setTagId(tagId);
 		params.setSortBy(sortBy);
 		params.setPerPage(perPage);
 		params.setPage(page);

@@ -203,12 +203,13 @@ class CertificateServiceImplTest {
 		Assertions.assertThrows(ServiceException.class,
 						() -> certificateService.update(certificateFirstDTO));
 	}
-	//	@Test
-//	void save() {
-//		when(certificateRepository.save(certificateSecond)).thenReturn(Optional.of
-//		(certificateSecond));
-//		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
-//	}
+
+	@Test
+	void save() {
+		when(certificateRepository.save(certificateSecond)).thenReturn(Optional.of
+						(certificateSecond));
+		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
+	}
 	//	@Test
 //	void update() {
 //		when(certificateRepository.update(certificateSecond)).thenReturn(Optional.of

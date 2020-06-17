@@ -2,8 +2,8 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -40,15 +40,10 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 					"DELETE FROM certificates WHERE id = :id;";
 	public static final String QUERY_UNBIND =
 					"DELETE FROM certificate_tag WHERE certificate_id = :id;";
-	private TagRepositoryImpl tagRepository;
+	private final TagRepository tagRepository;
 
-	@Autowired
-	public CertificateRepositoryImpl(DataSource dataSource) {
+	public CertificateRepositoryImpl(DataSource dataSource, TagRepository tagRepository) {
 		super.setDataSource(dataSource);
-	}
-
-	@Autowired
-	public void setTagRepository(TagRepositoryImpl tagRepository) {
 		this.tagRepository = tagRepository;
 	}
 
@@ -84,7 +79,6 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.addValue("name", certificate.getName())
 						.addValue("description", certificate.getDescription())
 						.addValue("price", certificate.getPrice())
-						//.addValue("creation_date", certificate.getCreationDate())
 						.addValue("modification_date", certificate.getModificationDate())
 						.addValue("duration", certificate.getDuration());
 		getNamedParameterJdbcTemplate().update(QUERY_UPDATE, params, keyHolder);

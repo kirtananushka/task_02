@@ -25,6 +25,8 @@ public class ErrorMessage {
 					"Invalid certificate duration: ";
 	public static final String ERROR_INVALID_DURATION_EXPR =
 					"Invalid expression with duration: ";
+	public static final String ERROR_INVALID_TAG_ID_EXPR =
+					"Invalid expression with tad ID: ";
 	public static final String ERROR_CERTIFICATE_NOT_CREATED =
 					"Certificate not created";
 	public static final String ERROR_CERTIFICATE_NOT_UPDATED =
@@ -57,4 +59,6 @@ public class ErrorMessage {
 					"Invalid number of positions per page: ";
 	public static final String ERROR_INCORRECT_PARAM_SORTING =
 					"Incorrect parameter for sorting: ";
+	public static final String ERROR_ADD_TAG_WITHOUT_NAME =
+					"You cannot add new tag without name; tag ID: ";
 }

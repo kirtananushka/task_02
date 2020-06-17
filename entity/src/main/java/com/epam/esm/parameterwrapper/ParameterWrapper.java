@@ -15,7 +15,8 @@ public class ParameterWrapper {
 	private String creationDate;
 	private String modificationDate;
 	private String duration;
-	private String tag;
+	private String tagName;
+	private String tagId;
 	private String sortBy;
 	private String perPage;
 	private String page;

@@ -17,31 +17,31 @@ import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/tags")
 public class TagController {
 
 	private final TagService tagService;
 
-	@GetMapping("/tags")
+	@GetMapping
 	public Collection<TagDTO> getTags() {
 		return tagService.getAll();
 	}
 
-	@GetMapping("/tags/{tag_id}")
-	public TagDTO getTag(@PathVariable Long tag_id) {
-		return tagService.getById(tag_id).get();
+	@GetMapping("{id}")
+	public TagDTO getTag(@PathVariable Long id) {
+		return tagService.getById(id).get();
 	}
 
-	@PostMapping("/tags")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public TagDTO addTag(@RequestBody TagDTO tagDTO) {
 		tagDTO.setId(0L);
 		return tagService.save(tagDTO).get();
 	}
 
-	@DeleteMapping("/tags/{tag_id}")
+	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void removeTag(@PathVariable Long tag_id) {
-		tagService.remove(tag_id);
+	public void removeTag(@PathVariable Long id) {
+		tagService.remove(id);
 	}
 }

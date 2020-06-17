@@ -64,7 +64,7 @@ public class EntityExceptionHandler {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
 						HttpStatus.BAD_REQUEST.toString(),
-						"No object: " + e);
+						"No object");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
@@ -76,5 +76,14 @@ public class EntityExceptionHandler {
 						HttpStatus.BAD_REQUEST.toString(),
 						"Bad request");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<EntityErrorResponse> handleException(Throwable e) {
+		EntityErrorResponse error = new EntityErrorResponse(
+						HttpStatus.BAD_REQUEST.value(),
+						HttpStatus.BAD_REQUEST.toString(),
+						"Internal server error" + e);
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

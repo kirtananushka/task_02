@@ -1,3 +1,4 @@
+
 \connect certificates_db
 
 -- -------------------------------------
@@ -10,7 +11,7 @@ create table certificates
     id                bigserial   not null primary key,
     name              varchar(64) not null,
     description       varchar(64) not null CHECK (price >= 0),
-    price             numeric     not null,
+    price             numeric(10,2)     not null,
     creation_date     date        not null default now(),
     modification_date date,
     duration          integer     not null CHECK (duration > 0)

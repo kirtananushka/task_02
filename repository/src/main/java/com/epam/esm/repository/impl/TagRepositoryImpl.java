@@ -41,8 +41,6 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 					"INSERT INTO tags (name) VALUES (:tag_name);";
 	public static final String QUERY_ADD_LINKAGE =
 					"INSERT INTO certificate_tag (certificate_id, tag_id) VALUES (:cert_id, :tag_id);";
-	public static final String QUERY_GET_TAG_BY_NAME =
-					"SELECT id FROM tags WHERE name = :tag_name";
 	public static final String QUERY_GET_NAME_BY_ID =
 					"SELECT name FROM tags WHERE id = :tag_id";
 
@@ -82,11 +80,13 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 		return Optional.of(tag);
 	}
 
+	@Override
 	public List<Tag> getTagsByCertificateId(Long id) {
 		SqlParameterSource params = new MapSqlParameterSource(CERT_ID, id);
 		return getNamedParameterJdbcTemplate().query(QUERY_GET_TAGS_BY_CERT, params, new TagMapper());
 	}
 
+	@Override
 	public void bindCertificateTag(Certificate certificate) {
 		List<Tag> tagList = certificate.getTags();
 		KeyHolder tagKeyHolder = new GeneratedKeyHolder();
