@@ -19,8 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
-				implements TagRepository {
+public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport  implements TagRepository {
 
 	public static final String TAG_NAME = "tag_name";
 	public static final String TAG_ID = "tag_id";

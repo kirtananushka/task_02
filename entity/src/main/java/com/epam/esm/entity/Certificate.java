@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Component
+//@Component
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Certificate extends Entity {
