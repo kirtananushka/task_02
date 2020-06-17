@@ -23,11 +23,10 @@ public class CertificateServiceImpl implements CertificateService {
 
 	private final CertificateRepository certificateRepository;
 	private final TagService tagService;
-	private final Validator validator;
 
 	@Override
 	public Optional<CertificateDTO> getById(Long id) {
-		if (!validator.checkLong(id)) {
+		if (!Validator.checkLong(id)) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + id);
 		}
@@ -47,28 +46,28 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public Optional<CertificateDTO> save(CertificateDTO certificateDTO) {
-		if (!validator.checkLong(certificateDTO.getId())) {
+		if (!Validator.checkLong(certificateDTO.getId())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
 		}
-		if (Objects.isNull(certificateDTO.getName()) || !validator
+		if (Objects.isNull(certificateDTO.getName()) || !Validator
 						.checkText(certificateDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
 											+ certificateDTO.getName().length());
 		}
-		if (Objects.isNull(certificateDTO.getDescription()) || !validator
+		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
 						.checkText(certificateDTO.getDescription())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
 											+ certificateDTO.getDescription().length());
 		}
-		if (Objects.isNull(certificateDTO.getPrice()) || !validator
+		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
 						.checkPrice(certificateDTO.getPrice().toString())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
 		}
-		if (Objects.isNull(certificateDTO.getDuration()) || !validator
+		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
 						.checkInt(certificateDTO.getDuration())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_DURATION
@@ -93,7 +92,7 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public Optional<CertificateDTO> update(CertificateDTO certificateDTO) {
-		if (Objects.isNull(certificateDTO.getId()) || !validator
+		if (Objects.isNull(certificateDTO.getId()) || !Validator
 						.checkPositiveLong(certificateDTO.getId())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
@@ -104,24 +103,24 @@ public class CertificateServiceImpl implements CertificateService {
 			throw new ServiceException(
 							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + certificateDTO.getId());
 		}
-		if (Objects.isNull(certificateDTO.getName()) || !validator
+		if (Objects.isNull(certificateDTO.getName()) || !Validator
 						.checkText(certificateDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
 											+ certificateDTO.getName().length());
 		}
-		if (Objects.isNull(certificateDTO.getDescription()) || !validator
+		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
 						.checkText(certificateDTO.getDescription())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
 											+ certificateDTO.getDescription().length());
 		}
-		if (Objects.isNull(certificateDTO.getPrice()) || !validator
+		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
 						.checkPrice(certificateDTO.getPrice().toString())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
 		}
-		if (Objects.isNull(certificateDTO.getDuration()) || !validator
+		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
 						.checkInt(certificateDTO.getDuration())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_DURATION + certificateDTO.getDuration());
@@ -162,16 +161,16 @@ public class CertificateServiceImpl implements CertificateService {
 				continue;
 			}
 			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())
-							&& !validator.checkLong(tagDTO.getId())) {
+							&& !Validator.checkLong(tagDTO.getId())) {
 				throw new ServiceException(
 								ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 			}
 			if (Objects.nonNull(tagDTO.getId()) && Objects.nonNull(tagDTO.getName())) {
-				if (!validator.checkLong(tagDTO.getId())) {
+				if (!Validator.checkLong(tagDTO.getId())) {
 					throw new ServiceException(
 									ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 				}
-				if (!validator.checkText(tagDTO.getName())) {
+				if (!Validator.checkText(tagDTO.getName())) {
 					throw new ServiceException(
 									ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName());
 				}

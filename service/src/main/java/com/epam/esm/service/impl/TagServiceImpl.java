@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
 
 	private final TagRepository tagRepository;
-	private final Validator validator;
 
 	@Override
 	public Collection<TagDTO> getAll() {
@@ -34,7 +33,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Optional<TagDTO> getById(Long id) {
-		if (!validator.checkLong(id)) {
+		if (!Validator.checkLong(id)) {
 			throw new ServiceException(ErrorMessage.ERROR_INVALID_TAG_ID + id);
 		}
 		Optional<Tag> tagOptional;
@@ -53,10 +52,10 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Optional<TagDTO> save(TagDTO tagDTO) {
-		if (!validator.checkLong(tagDTO.getId())) {
+		if (!Validator.checkLong(tagDTO.getId())) {
 			throw new ServiceException(ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 		}
-		if (Objects.isNull(tagDTO.getName()) || !validator.checkText(tagDTO.getName())) {
+		if (Objects.isNull(tagDTO.getName()) || !Validator.checkText(tagDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName().length());
 		}
