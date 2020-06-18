@@ -1,8 +1,9 @@
+
 \connect certificates_db
 
-INSERT INTO certificates
+insert into certificates
     (name, description, price, creation_date, modification_date, duration)
-VALUES ('Lorem ipsum', 'Lorem ipsum dolor sit amet elit', 70, '01.03.2020', null, 270),
+values ('Lorem ipsum', 'Lorem ipsum dolor sit amet elit', 70, '01.03.2020', null, 270),
        ('Maecenas consectetuer', 'Maecenas consectetuer porttitor commodo dolor enim', 150, '25.05.2020', null, 50),
        ('Magna porttitor', 'Magna porttitor nunc imperdiet dolor dolor', 70, '05.03.2020', null, 5),
        ('Porttitor lectus', 'Porttitor lectus sed massa lectus congue', 130, '17.03.2020', null, 10),
@@ -104,9 +105,9 @@ VALUES ('Lorem ipsum', 'Lorem ipsum dolor sit amet elit', 70, '01.03.2020', null
        ('Lectus commodo', 'Lectus commodo consectetuer imperdiet lorem dolor', 200, '08.06.2020', null, 25),
        ('Sit eros', 'Sit eros quis viverra quis eros', 150, '20.05.2020', null, 50);
 
-INSERT INTO tags
+insert into tags
     (name)
-VALUES ('Suspendisse'),
+values ('Suspendisse'),
        ('Donec'),
        ('Habitant'),
        ('Laoreet'),
@@ -137,9 +138,9 @@ VALUES ('Suspendisse'),
        ('Vitae'),
        ('Augue');
 
-INSERT INTO certificate_tag
+insert into certificate_tag
     (certificate_id, tag_id)
-VALUES (1, 21),
+values (1, 21),
        (1, 24),
        (2, 2),
        (2, 15),

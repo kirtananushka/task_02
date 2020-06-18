@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,8 +27,6 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 	public static final String COLUMN_ID = "id";
 	public static final String QUERY_GET_BY_ID =
 					"SELECT id, name FROM tags WHERE id = :tag_id";
-	public static final String QUERY_GET_ALL =
-					"SELECT id, name FROM tags ORDER BY id";
 	public static final String QUERY_ADD =
 					"INSERT INTO tags (name) VALUES (:tag_name);";
 	public static final String QUERY_REMOVE =
@@ -61,12 +58,6 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 	public void remove(Tag tag) {
 		SqlParameterSource params = new MapSqlParameterSource(TAG_ID, tag.getId());
 		getNamedParameterJdbcTemplate().update(QUERY_REMOVE, params);
-	}
-
-	@Override
-	public Collection<Tag> getAll() {
-		return getNamedParameterJdbcTemplate()
-						.query(QUERY_GET_ALL, new TagMapper());
 	}
 
 	@Override

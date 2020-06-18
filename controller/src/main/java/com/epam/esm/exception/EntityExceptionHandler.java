@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,26 @@ public class EntityExceptionHandler {
 	 * @param e of type ServiceException  .
 	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
 	 */
-	@ExceptionHandler(ServiceException.class)
+	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(ServiceException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						e.getMessage());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type ServiceNotFoundException  .
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
+	@ExceptionHandler
+	public ResponseEntity<EntityErrorResponse> handleException(ServiceNotFoundException e) {
+		EntityErrorResponse error = new EntityErrorResponse(
+						HttpStatus.NOT_FOUND.value(),
+						e.getMessage());
+		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -44,7 +58,6 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(Exception e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Bad request");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
@@ -59,7 +72,6 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(HttpMessageNotReadableException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Unexpected value");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
@@ -75,7 +87,6 @@ public class EntityExceptionHandler {
 					MethodArgumentTypeMismatchException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Unexpected value");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
@@ -90,7 +101,6 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(DataIntegrityViolationException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Database exception");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
@@ -105,8 +115,7 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(NullPointerException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
-						"No object");
+						"Missing required elements");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
@@ -121,7 +130,6 @@ public class EntityExceptionHandler {
 					NoHandlerFoundException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Bad request");
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
@@ -136,7 +144,6 @@ public class EntityExceptionHandler {
 	public ResponseEntity<EntityErrorResponse> handleException(Throwable e) {
 		EntityErrorResponse error = new EntityErrorResponse(
 						HttpStatus.BAD_REQUEST.value(),
-						HttpStatus.BAD_REQUEST.toString(),
 						"Internal server error" + e);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

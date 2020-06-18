@@ -4,6 +4,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.ErrorMessage;
 import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.ServiceNotFoundException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ModelMapper;
 import com.epam.esm.service.dto.TagDTO;
@@ -12,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,15 +22,6 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
 
 	private final TagRepository tagRepository;
-
-	@Override
-	public Collection<TagDTO> getAll() {
-		return tagRepository.getAll()
-		                    .stream()
-		                    .map(ModelMapper::convertToTagDTO)
-		                    .map(Optional::get)
-		                    .collect(Collectors.toList());
-	}
 
 	@Override
 	public Optional<TagDTO> getById(Long id) {
@@ -42,7 +32,7 @@ public class TagServiceImpl implements TagService {
 		try {
 			tagOptional = tagRepository.getById(id);
 		} catch (Exception e) {
-			throw new ServiceException(
+			throw new ServiceNotFoundException(
 							ErrorMessage.ERROR_NO_TAG_WITH_ID + id, e);
 		}
 		if (tagOptional.isEmpty()) {
@@ -57,7 +47,11 @@ public class TagServiceImpl implements TagService {
 		if (!Validator.checkLong(tagDTO.getId())) {
 			throw new ServiceException(ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 		}
-		if (Objects.isNull(tagDTO.getName()) || !Validator.checkText(tagDTO.getName())) {
+		if (Objects.isNull(tagDTO.getName())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
+		}
+		if (!Validator.checkText(tagDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName().length());
 		}

@@ -5,6 +5,7 @@ import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.ErrorMessage;
 import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.ServiceNotFoundException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.CertificateDTO;
 import com.epam.esm.service.dto.ModelMapper;
@@ -36,7 +37,7 @@ public class CertificateServiceImpl implements CertificateService {
 		try {
 			certificateOptional = certificateRepository.getById(id);
 		} catch (Exception e) {
-			throw new ServiceException(
+			throw new ServiceNotFoundException(
 							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + id, e);
 		}
 		if (certificateOptional.isEmpty()) {
@@ -52,14 +53,20 @@ public class CertificateServiceImpl implements CertificateService {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
 		}
-		if (Objects.isNull(certificateDTO.getName()) || !Validator
-						.checkText(certificateDTO.getName())) {
+		if (Objects.isNull(certificateDTO.getName())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
+		}
+		if (!Validator.checkText(certificateDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
 											+ certificateDTO.getName().length());
 		}
-		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
-						.checkText(certificateDTO.getDescription())) {
+		if (Objects.isNull(certificateDTO.getDescription())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_MISSING_DESCRIPTION);
+		}
+		if (!Validator.checkText(certificateDTO.getDescription())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
 											+ certificateDTO.getDescription().length());
@@ -108,17 +115,23 @@ public class CertificateServiceImpl implements CertificateService {
 		try {
 			certificateRepository.getById(certificateDTO.getId()).isPresent();
 		} catch (Exception e) {
-			throw new ServiceException(
+			throw new ServiceNotFoundException(
 							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + certificateDTO.getId());
 		}
-		if (Objects.isNull(certificateDTO.getName()) || !Validator
-						.checkText(certificateDTO.getName())) {
+		if (Objects.isNull(certificateDTO.getName())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
+		}
+		if (!Validator.checkText(certificateDTO.getName())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
 											+ certificateDTO.getName().length());
 		}
-		if (Objects.isNull(certificateDTO.getDescription()) || !Validator
-						.checkText(certificateDTO.getDescription())) {
+		if (Objects.isNull(certificateDTO.getDescription())) {
+			throw new ServiceException(
+							ErrorMessage.ERROR_MISSING_DESCRIPTION);
+		}
+		if (!Validator.checkText(certificateDTO.getDescription())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
 											+ certificateDTO.getDescription().length());
@@ -176,7 +189,8 @@ public class CertificateServiceImpl implements CertificateService {
 				throw new ServiceException(
 								ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 			}
-			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())) {
+			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())
+							&& tagService.getById(tagDTO.getId()).isEmpty()) {
 				throw new ServiceException(
 								ErrorMessage.ERROR_ADD_TAG_WITHOUT_NAME + tagDTO.getId());
 			}

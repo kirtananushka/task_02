@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.ServiceNotFoundException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDTO;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,15 +55,6 @@ class TagServiceImplTest {
 	}
 
 	@Test
-	void getAll() {
-		when(tagRepository.getAll()).thenReturn(tagList);
-		Collection<TagDTO> tagDTOCollection = tagService.getAll();
-		List<TagDTO> tagDTOList = new ArrayList<>(tagDTOCollection);
-		Assertions.assertEquals(2, tagDTOList.size());
-		Assertions.assertEquals(TagDTO.class, tagDTOList.get(0).getClass());
-	}
-
-	@Test
 	void getById() {
 		when(tagRepository.getById(anyLong())).thenReturn(Optional.of(tagFirst));
 		Optional<TagDTO> optionalTagDTO = tagService.getById(tagFirst.getId());
@@ -86,7 +77,7 @@ class TagServiceImplTest {
 	@Test
 	void getByIdGetWithException() {
 		when(tagRepository.getById(anyLong())).thenThrow(RuntimeException.class);
-		Assertions.assertThrows(ServiceException.class, () -> tagService.getById(3L));
+		Assertions.assertThrows(ServiceNotFoundException.class, () -> tagService.getById(3L));
 	}
 
 	@Test

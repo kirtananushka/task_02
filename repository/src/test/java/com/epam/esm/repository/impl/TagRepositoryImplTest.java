@@ -1,6 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Tag;
+import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.repository.config.RepositoryTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -29,14 +30,8 @@ class TagRepositoryImplTest {
 
 	@Autowired
 	private TagRepositoryImpl tagRepository;
-
-	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
-	void getAll() {
-		tagRepository.getAll();
-		Assertions.assertEquals(30, tagRepository.getAll().size());
-	}
+	@Autowired
+	private SearchRepositoryImpl searchRepository;
 
 	@Test
 	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
@@ -62,10 +57,13 @@ class TagRepositoryImplTest {
 	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
 	@Sql("/db.test/test_inserts.sql")
 	void remove() {
+		ParameterWrapper params = new ParameterWrapper();
+		params.setPage("1");
+		params.setSize("50");
 		Optional<Tag> testTag = tagRepository.getById(1L);
-		Assertions.assertEquals(30, tagRepository.getAll().size());
+		Assertions.assertEquals(30, searchRepository.searchTag(params).size());
 		tagRepository.remove(testTag.get());
-		Assertions.assertEquals(29, tagRepository.getAll().size());
+		Assertions.assertEquals(29, searchRepository.searchTag(params).size());
 		Assertions.assertThrows(NullPointerException.class,
 						() -> tagRepository.getById(1L).get());
 	}

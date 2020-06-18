@@ -10,10 +10,12 @@ import java.util.regex.Pattern;
 @Component
 public class QueryBuilder {
 
-	public static final String SELECT = "SELECT DISTINCT "
+	public static final String SELECT_CERTIFICATES = "SELECT DISTINCT "
 					+ "certificates.id, certificates.name, description, price, creation_date, "
-					+ "modification_date, duration FROM certificates INNER JOIN (tags INNER JOIN "
+					+ "modification_date, duration FROM certificates LEFT JOIN (tags INNER JOIN "
 					+ "certificate_tag ON tags.id = tag_id) ON  certificates.id = certificate_id ";
+	public static final String SELECT_TAGS = "SELECT DISTINCT "
+					+ "tags.id, tags.name FROM tags ORDER BY id ";
 	public static final String CLAUSE_TSQUERY = "');";
 	public static final String CLAUSE_STRING = "';";
 	public static final String SEMICOLON = ";";
@@ -75,9 +77,9 @@ public class QueryBuilder {
 	public static final String LIMIT = " LIMIT ";
 	public static final String OFFSET = " OFFSET ";
 
-	public StringBuilder buildColumns(ParameterWrapper params) {
+	public StringBuilder buildCertificateColumns(ParameterWrapper params) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(SELECT);
+		builder.append(SELECT_CERTIFICATES);
 		if (Objects.nonNull(params.getName())) {
 			builder.append(NAME)
 			       .append(params.getName())
@@ -114,6 +116,12 @@ public class QueryBuilder {
 			       .append(params.getTagName())
 			       .append(CLAUSE_STRING);
 		}
+		return builder;
+	}
+
+	public StringBuilder buildTagColumns(ParameterWrapper params) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(SELECT_TAGS);
 		return builder;
 	}
 
@@ -166,7 +174,7 @@ public class QueryBuilder {
 	public StringBuilder buildPagination(ParameterWrapper params) {
 		StringBuilder builder = new StringBuilder();
 		if (Objects.nonNull(params.getPage())) {
-			String strPerPage = params.getPerPage();
+			String strPerPage = params.getSize();
 			int perPage = 0;
 			if (strPerPage.matches(PATTERN_DIGIT)) {
 				perPage = Integer.parseInt(strPerPage);

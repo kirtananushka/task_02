@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.service.SearchService;
 import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.TagDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import java.util.Collection;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/certificates")
+@RequestMapping("/api/v1")
 public class SearchController {
 
 	/**
@@ -28,8 +29,11 @@ public class SearchController {
 	private final SearchService searchService;
 
 	/**
-	 * GET method query returns a collection of filtered<br>
+	 * GET method searchCertificate returns a collection of filtered<br>
 	 * and/or sorted CertificateDTO objects.<br>
+	 * <p>
+	 * Get all:<br>
+	 * [GET /api/v1/certificates]<br>
 	 * <p>
 	 * Filtering by name:<br>
 	 * [GET /api/v1/certificates?name={name}]<br>
@@ -136,8 +140,8 @@ public class SearchController {
 	 * Filtering and sorting by multiple parameters:<br>
 	 * [GET /api/v1/certificates?name={name}&amp;sort=-name,duration,-price] etc.<br>
 	 * <p>
-	 * Pagination (by default, 10 entries per page if a page number is specified):<br>
-	 * [GET /api/v1/certificates?page=1&amp;per_page=10] etc.<br>
+	 * Pagination (by default, 50 entries per page):<br>
+	 * [GET /api/v1/certificates?page=1&amp;size=10] etc.<br>
 	 * <p>
 	 * Request (application/json).<br>
 	 * Response 200 (application/json).<br>
@@ -152,12 +156,12 @@ public class SearchController {
 	 * @param tagName          of type String.
 	 * @param tagId            of type String.
 	 * @param sortBy           of type String.
-	 * @param perPage          of type String.
+	 * @param size          of type String.
 	 * @param page             of type String.
 	 * @return Collection&lt;CertificateDTO&gt;
 	 */
-	@GetMapping
-	public Collection<CertificateDTO> query(
+	@GetMapping("/certificates")
+	public Collection<CertificateDTO> searchCertificate(
 					@RequestParam(value = "name", required = false) String name,
 					@RequestParam(value = "description", required = false) String description,
 					@RequestParam(value = "price", required = false) String price,
@@ -167,8 +171,8 @@ public class SearchController {
 					@RequestParam(value = "tag_name", required = false) String tagName,
 					@RequestParam(value = "tag_id", required = false) String tagId,
 					@RequestParam(value = "sort", required = false, defaultValue = "certificates.id") String sortBy,
-					@RequestParam(value = "per_page", required = false, defaultValue = "10") String perPage,
-					@RequestParam(value = "page", required = false) String page) {
+					@RequestParam(value = "size", required = false, defaultValue = "50") String size,
+					@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setName(name);
 		params.setDescription(description);
@@ -179,8 +183,35 @@ public class SearchController {
 		params.setTagName(tagName);
 		params.setTagId(tagId);
 		params.setSortBy(sortBy);
-		params.setPerPage(perPage);
+		params.setSize(size);
 		params.setPage(page);
-		return searchService.search(params);
+		return searchService.searchCertificate(params);
+	}
+
+	/**
+	 * GET method searchTag returns a collection of TagDTO objects.<br>
+	 * <p>
+	 * Get all:<br>
+	 * [GET /api/v1/tags]<br>
+	 * <p>
+	 * Pagination (by default, 50 entries per page):<br>
+	 * [GET /api/v1/tags?page=1&amp;size=10] etc.<br>
+	 * <p>
+	 * Request (application/json).<br>
+	 * Response 200 (application/json).
+	 * <p>
+	 *
+	 * @param size of type String
+	 * @param page of type String
+	 * @return collection of TagDTO objects (type Collection&lt;TagDTO&gt;).
+	 */
+	@GetMapping("/tags")
+	public Collection<TagDTO> searchTag(
+					@RequestParam(value = "size", required = false, defaultValue = "50") String size,
+					@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
+		ParameterWrapper params = new ParameterWrapper();
+		params.setSize(size);
+		params.setPage(page);
+		return searchService.searchTag(params);
 	}
 }

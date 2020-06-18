@@ -11,6 +11,12 @@ public class ErrorMessage {
 					"Invalid certificate ID: ";
 	public static final String ERROR_INVALID_TAG_ID =
 					"Invalid tag ID: ";
+	public static final String ERROR_MISSING_CERTIFICATE_NAME =
+					"Missing required element: certificate name";
+	public static final String ERROR_MISSING_TAG_NAME =
+					"Missing required element: tag name";
+	public static final String ERROR_MISSING_DESCRIPTION =
+					"Missing required element: certificate description";
 	public static final String ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH =
 					"Incorrect certificate name length; expected 1...64, found: ";
 	public static final String ERROR_INCORRECT_TAG_NAME_LENGTH =
@@ -55,7 +61,7 @@ public class ErrorMessage {
 					"Invalid expression with modification date: ";
 	public static final String ERROR_INVALID_PAGE =
 					"Invalid page number: ";
-	public static final String ERROR_INVALID_PER_PAGE =
+	public static final String ERROR_INVALID_SIZE_PER_PAGE =
 					"Invalid number of positions per page: ";
 	public static final String ERROR_INCORRECT_PARAM_SORTING =
 					"Incorrect parameter for sorting: ";

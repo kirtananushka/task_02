@@ -18,6 +18,6 @@ public class ParameterWrapper {
 	private String tagName;
 	private String tagId;
 	private String sortBy;
-	private String perPage;
+	private String size;
 	private String page;
 }

@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-
 /**
  * Class TagController for task 2.
  *
@@ -30,21 +28,6 @@ public class TagController {
 	 * Field tagService
 	 */
 	private final TagService tagService;
-
-	/**
-	 * GET method getTags returns collection of TagDTO objects.
-	 * <p>
-	 * [GET /api/v1/tags/]<br>
-	 * Request (application/json).<br>
-	 * Response 200 (application/json).
-	 * <p>
-	 *
-	 * @return collection of TagDTO objects (type Collection&lt;TagDTO&gt;).
-	 */
-	@GetMapping
-	public Collection<TagDTO> getTags() {
-		return tagService.getAll();
-	}
 
 	/**
 	 * GET method getTag returns TagDTO object.

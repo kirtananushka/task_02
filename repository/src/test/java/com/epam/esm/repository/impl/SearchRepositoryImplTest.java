@@ -32,7 +32,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setName("porttitor");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(4L, result.get(result.size() - 1).getId());
@@ -45,7 +45,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setName("porttitor");
 		params.setSortBy("-certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(4L, result.get(0).getId());
 		Assertions.assertEquals(3L, result.get(result.size() - 1).getId());
@@ -58,7 +58,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDescription("dolor nunc");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(5L, result.get(result.size() - 1).getId());
@@ -71,7 +71,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(7L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -84,7 +84,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("<>30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -97,7 +97,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("!=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -110,7 +110,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice(">30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -123,7 +123,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("<40");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(7L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -136,7 +136,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice(">=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -149,7 +149,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("<=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(7L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -162,7 +162,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("between 50 and 100");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(4, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(6L, result.get(result.size() - 1).getId());
@@ -175,7 +175,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPrice("not between 50 and 100");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(6, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -188,7 +188,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(7L, result.get(0).getId());
 		Assertions.assertEquals(9L, result.get(result.size() - 1).getId());
@@ -201,7 +201,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("<>30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -214,7 +214,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("!=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -227,7 +227,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration(">30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(6, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -240,7 +240,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("<40");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(4, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(9L, result.get(result.size() - 1).getId());
@@ -253,7 +253,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration(">=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(8, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -266,7 +266,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("<=30");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(4, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(9L, result.get(result.size() - 1).getId());
@@ -279,7 +279,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("between 50 and 100");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(4, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -292,7 +292,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setDuration("not between 50 and 100");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(6, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(9L, result.get(result.size() - 1).getId());
@@ -305,7 +305,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("2020-03-01");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -318,7 +318,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("<>2020-03-01");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(9, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -331,7 +331,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("!=2020-03-01");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(9, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -344,7 +344,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate(">2020-03-01");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(9, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -357,7 +357,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("<2020-03-05");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(3L, result.get(result.size() - 1).getId());
@@ -370,7 +370,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate(">=2020-03-05");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(9, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -383,7 +383,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("<=2020-03-05");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(3L, result.get(result.size() - 1).getId());
@@ -396,7 +396,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("between 2020-03-05 and 2020-05-25");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(9, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -409,7 +409,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setCreationDate("not between 2020-03-05 and 2020-05-25");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -426,7 +426,7 @@ class SearchRepositoryImplTest {
 		params.setCreationDate("2020-05-25");
 		params.setDuration("50");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(2L, result.get(result.size() - 1).getId());
@@ -439,7 +439,7 @@ class SearchRepositoryImplTest {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setTagName("Lorem");
 		params.setSortBy("certificates.id");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(2, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(5L, result.get(result.size() - 1).getId());
@@ -451,7 +451,7 @@ class SearchRepositoryImplTest {
 	void sortByName() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("name");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(8L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -463,7 +463,7 @@ class SearchRepositoryImplTest {
 	void sortByDescription() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("description");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(8L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -475,7 +475,7 @@ class SearchRepositoryImplTest {
 	void sortByPrice() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("price");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(8L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
@@ -487,7 +487,7 @@ class SearchRepositoryImplTest {
 	void sortByCreationDate() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("creation_date");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(2L, result.get(result.size() - 1).getId());
@@ -499,7 +499,7 @@ class SearchRepositoryImplTest {
 	void sortByDuration() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(3L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -511,7 +511,7 @@ class SearchRepositoryImplTest {
 	void sortByNameDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-name");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -523,7 +523,7 @@ class SearchRepositoryImplTest {
 	void sortByDescriptionDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-description");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(10L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -535,7 +535,7 @@ class SearchRepositoryImplTest {
 	void sortByPriceDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-price");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(10L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -547,7 +547,7 @@ class SearchRepositoryImplTest {
 	void sortByCreationDateDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-creation_date");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(2L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -559,7 +559,7 @@ class SearchRepositoryImplTest {
 	void sortByDurationDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(3L, result.get(result.size() - 1).getId());
@@ -571,7 +571,7 @@ class SearchRepositoryImplTest {
 	void sortByAllParams() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("name,description,price,creation_date,modification_date,duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(8L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -583,7 +583,7 @@ class SearchRepositoryImplTest {
 	void sortByAllParamsDesc() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("-name,-description,-price,-creation_date,-modification_date,-duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(1L, result.get(0).getId());
 		Assertions.assertEquals(8L, result.get(result.size() - 1).getId());
@@ -595,7 +595,7 @@ class SearchRepositoryImplTest {
 	void sortByAllParamsMixed() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("name,description,-price,creation_date,-modification_date,duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(8L, result.get(0).getId());
 		Assertions.assertEquals(1L, result.get(result.size() - 1).getId());
@@ -607,9 +607,19 @@ class SearchRepositoryImplTest {
 	void sortByAllParamsMixed2() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setSortBy("price,-name,description,-creation_date,modification_date,-duration");
-		List<Certificate> result = new ArrayList<>(searchRepository.search(params));
+		List<Certificate> result = new ArrayList<>(searchRepository.searchCertificate(params));
 		Assertions.assertEquals(10, result.size());
 		Assertions.assertEquals(7L, result.get(0).getId());
 		Assertions.assertEquals(10L, result.get(result.size() - 1).getId());
+	}
+
+	@Test
+	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
+	@Sql("/db.test/test_inserts.sql")
+	void getAllTags() {
+		ParameterWrapper params = new ParameterWrapper();
+		params.setSize("50");
+		params.setPage("1");
+		Assertions.assertEquals(30, searchRepository.searchTag(params).size());
 	}
 }
