@@ -27,7 +27,6 @@ public class SearchRepositoryImpl extends NamedParameterJdbcDaoSupport
 		super.setDataSource(dataSource);
 	}
 
-	// FIXME: 18.06.2020 to constructor
 	@Autowired
 	public void setTagRepository(TagRepositoryImpl tagRepository) {
 		this.tagRepository = tagRepository;

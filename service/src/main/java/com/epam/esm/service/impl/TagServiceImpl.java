@@ -8,7 +8,7 @@ import com.epam.esm.service.ServiceNotFoundException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ModelMapper;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.validation.Validator;
+import com.epam.esm.service.validation.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Optional<TagDTO> getById(Long id) {
-		if (!Validator.checkLong(id)) {
+		if (!EntityValidator.checkLong(id)) {
 			throw new ServiceException(ErrorMessage.ERROR_INVALID_TAG_ID + id);
 		}
 		Optional<Tag> tagOptional;
@@ -44,16 +44,10 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Optional<TagDTO> save(TagDTO tagDTO) {
-		if (!Validator.checkLong(tagDTO.getId())) {
-			throw new ServiceException(ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
-		}
+		EntityValidator.validate(tagDTO);
 		if (Objects.isNull(tagDTO.getName())) {
 			throw new ServiceException(
-							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
-		}
-		if (!Validator.checkText(tagDTO.getName())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName().length());
+							ErrorMessage.ERROR_MISSING_TAG_NAME);
 		}
 		Tag tag = ModelMapper.convertToTag(tagDTO).get();
 		try {

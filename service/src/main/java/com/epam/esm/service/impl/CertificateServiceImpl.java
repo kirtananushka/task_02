@@ -10,7 +10,7 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.CertificateDTO;
 import com.epam.esm.service.dto.ModelMapper;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.validation.Validator;
+import com.epam.esm.service.validation.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public Optional<CertificateDTO> getById(Long id) {
-		if (!Validator.checkLong(id)) {
+		if (!EntityValidator.checkLong(id)) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + id);
 		}
@@ -49,39 +49,7 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public Optional<CertificateDTO> save(CertificateDTO certificateDTO) {
-		if (!Validator.checkLong(certificateDTO.getId())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
-		}
-		if (Objects.isNull(certificateDTO.getName())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
-		}
-		if (!Validator.checkText(certificateDTO.getName())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
-											+ certificateDTO.getName().length());
-		}
-		if (Objects.isNull(certificateDTO.getDescription())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_MISSING_DESCRIPTION);
-		}
-		if (!Validator.checkText(certificateDTO.getDescription())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
-											+ certificateDTO.getDescription().length());
-		}
-		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
-						.checkPrice(certificateDTO.getPrice().toString())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
-		}
-		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
-						.checkInt(certificateDTO.getDuration())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_DURATION
-											+ certificateDTO.getDuration());
-		}
+		EntityValidator.validate(certificateDTO);
 		checkTags(certificateDTO);
 		Certificate certificate = ModelMapper.convertToCertificate(certificateDTO).get();
 		certificate.setCreationDate(LocalDate.now());
@@ -107,44 +75,12 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public Optional<CertificateDTO> update(CertificateDTO certificateDTO) {
-		if (Objects.isNull(certificateDTO.getId()) || !Validator
-						.checkPositiveLong(certificateDTO.getId())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_CERTIFICATE_ID + certificateDTO.getId());
-		}
+		EntityValidator.validate(certificateDTO);
 		try {
 			certificateRepository.getById(certificateDTO.getId()).isPresent();
 		} catch (Exception e) {
 			throw new ServiceNotFoundException(
 							ErrorMessage.ERROR_NO_CERTIFICATE_WITH_ID + certificateDTO.getId());
-		}
-		if (Objects.isNull(certificateDTO.getName())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_MISSING_CERTIFICATE_NAME);
-		}
-		if (!Validator.checkText(certificateDTO.getName())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH
-											+ certificateDTO.getName().length());
-		}
-		if (Objects.isNull(certificateDTO.getDescription())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_MISSING_DESCRIPTION);
-		}
-		if (!Validator.checkText(certificateDTO.getDescription())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INCORRECT_DESCRIPTION_LENGTH
-											+ certificateDTO.getDescription().length());
-		}
-		if (Objects.isNull(certificateDTO.getPrice()) || !Validator
-						.checkPrice(certificateDTO.getPrice().toString())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_PRICE + certificateDTO.getPrice());
-		}
-		if (Objects.isNull(certificateDTO.getDuration()) || !Validator
-						.checkInt(certificateDTO.getDuration())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_DURATION + certificateDTO.getDuration());
 		}
 		checkTags(certificateDTO);
 		Certificate certificate = ModelMapper.convertToCertificate(certificateDTO).get();
@@ -185,7 +121,7 @@ public class CertificateServiceImpl implements CertificateService {
 				continue;
 			}
 			if (Objects.nonNull(tagDTO.getId()) && Objects.isNull(tagDTO.getName())
-							&& !Validator.checkLong(tagDTO.getId())) {
+							&& !EntityValidator.checkLong(tagDTO.getId())) {
 				throw new ServiceException(
 								ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 			}
@@ -195,11 +131,11 @@ public class CertificateServiceImpl implements CertificateService {
 								ErrorMessage.ERROR_ADD_TAG_WITHOUT_NAME + tagDTO.getId());
 			}
 			if (Objects.nonNull(tagDTO.getId()) && Objects.nonNull(tagDTO.getName())) {
-				if (!Validator.checkLong(tagDTO.getId())) {
+				if (!EntityValidator.checkLong(tagDTO.getId())) {
 					throw new ServiceException(
 									ErrorMessage.ERROR_INVALID_TAG_ID + tagDTO.getId());
 				}
-				if (!Validator.checkText(tagDTO.getName())) {
+				if (!EntityValidator.checkText(tagDTO.getName())) {
 					throw new ServiceException(
 									ErrorMessage.ERROR_INCORRECT_TAG_NAME_LENGTH + tagDTO.getName());
 				}

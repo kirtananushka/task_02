@@ -1,19 +1,23 @@
 package com.epam.esm.service.validation;
 
+import com.epam.esm.service.ServiceException;
+import com.epam.esm.service.dto.EntityDTO;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Component
-public class Validator {
+public class EntityValidator {
 
-	private static final char DECIMAL_SEPARATOR = '.';
-	private static final String MONEY_DECIMAL_FORMAT = "#0.00";
+	private static final String EMPTINESS = "";
 	private static final String DECIMAL_PATTERN = "\\d{1,8}\\.\\d\\d";
 	private static final String INTEGER_PATTERN = "\\d{1,8}";
 	private static final String NON_DIGITS_PATTERN = "\\D";
@@ -25,39 +29,31 @@ public class Validator {
 	private static final String BETWEEN = "BETWEEN ";
 	private static final String NOT = "NOT ";
 	private static final String AND = " AND ";
+	private static final String SEMICOLON = "; ";
 	private static final List<String> sortParams = Arrays.asList("certificates.id", "name",
 					"description", "price", "creation_date", "modification_date", "duration");
+
+	public static <T extends EntityDTO> void validate(T entityDTO) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<T>> constraintViolations = validator.validate(entityDTO);
+		if (Objects.nonNull(constraintViolations) && !constraintViolations.isEmpty()) {
+			StringBuilder errorBuilder = new StringBuilder();
+			for (ConstraintViolation<T> constraintViolation : constraintViolations) {
+				errorBuilder.append(SEMICOLON)
+				            .append(constraintViolation.getMessage());
+			}
+			String errorMessage = errorBuilder.toString().substring(2);
+			throw new ServiceException(errorMessage);
+		}
+	}
 
 	public static boolean checkLong(Long longNumber) {
 		return longNumber >= 0;
 	}
 
-	public static boolean checkPositiveLong(Long longNumber) {
-		return longNumber > 0;
-	}
-
-	public static boolean checkInt(int number) {
-		return number > 0;
-	}
-
 	public static boolean checkText(String text) {
 		return (text.length() > 0 && text.length() <= 64);
-	}
-
-	public static boolean checkPrice(String price) {
-		if (!price.matches(DECIMAL_PATTERN) && !price.matches(INTEGER_PATTERN)) {
-			return false;
-		}
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator(DECIMAL_SEPARATOR);
-		DecimalFormat decimalFormat = new DecimalFormat(MONEY_DECIMAL_FORMAT, symbols);
-		decimalFormat.setParseBigDecimal(true);
-		try {
-			decimalFormat.parse(price);
-		} catch (ParseException e) {
-			return false;
-		}
-		return true;
 	}
 
 	public static boolean checkPriceQuery(String price) {
@@ -69,7 +65,7 @@ public class Validator {
 	}
 
 	public static boolean checkIntegerQuery(String intExpr) {
-		String digitals = intExpr.replaceAll(NON_DIGITS_PATTERN, "");
+		String digitals = intExpr.replaceAll(NON_DIGITS_PATTERN, EMPTINESS);
 		return checkStrInteger(digitals) &&
 						checkQuery(intExpr, INTEGER_PATTERN);
 	}
@@ -79,7 +75,7 @@ public class Validator {
 		if (!param.matches(SORTING_PATTERN)) {
 			return false;
 		}
-		param = param.replaceAll(MINUS, "");
+		param = param.replaceAll(MINUS, EMPTINESS);
 		return sortParams.contains(param);
 	}
 

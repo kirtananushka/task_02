@@ -8,9 +8,9 @@ public class ErrorMessage {
 	public static final String ERROR_NO_CERTIFICATE_WITH_ID =
 					"No certificate with such ID: ";
 	public static final String ERROR_INVALID_CERTIFICATE_ID =
-					"Invalid certificate ID: ";
+					"Invalid certificate ID";
 	public static final String ERROR_INVALID_TAG_ID =
-					"Invalid tag ID: ";
+					"Invalid tag ID";
 	public static final String ERROR_MISSING_CERTIFICATE_NAME =
 					"Missing required element: certificate name";
 	public static final String ERROR_MISSING_TAG_NAME =
@@ -18,17 +18,18 @@ public class ErrorMessage {
 	public static final String ERROR_MISSING_DESCRIPTION =
 					"Missing required element: certificate description";
 	public static final String ERROR_INCORRECT_CERTIFICATE_NAME_LENGTH =
-					"Incorrect certificate name length; expected 1...64, found: ";
+					"Incorrect certificate name length; expected 1...64";
 	public static final String ERROR_INCORRECT_TAG_NAME_LENGTH =
 					"Incorrect tag name length; expected 1...64, found: ";
 	public static final String ERROR_INCORRECT_DESCRIPTION_LENGTH =
-					"Incorrect certificate description length; expected 1...64, found: ";
+					"Incorrect certificate description length; expected 1...64";
 	public static final String ERROR_INVALID_PRICE =
-					"Invalid certificate price: ";
+					"Invalid certificate price: positive number like 12345678.90 or 12345678 (precision of "
+									+ "8 and scale of 2 or 0) expected";
 	public static final String ERROR_INVALID_PRICE_EXPR =
-					"Invalid expression with price: ";
+					"Invalid expression with price";
 	public static final String ERROR_INVALID_DURATION =
-					"Invalid certificate duration: ";
+					"Invalid certificate duration: positive number 1...8 digits expected";
 	public static final String ERROR_INVALID_DURATION_EXPR =
 					"Invalid expression with duration: ";
 	public static final String ERROR_INVALID_TAG_ID_EXPR =
