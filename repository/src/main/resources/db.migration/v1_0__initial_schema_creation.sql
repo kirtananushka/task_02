@@ -1,4 +1,3 @@
-
 \connect certificates_db
 
 -- -------------------------------------
@@ -8,13 +7,13 @@ drop TABLE IF EXISTS certificates;
 -- -------------------------------------
 create table certificates
 (
-    id                bigserial   not null primary key,
-    name              varchar(64) not null,
-    description       varchar(64) not null CHECK (price >= 0),
-    price             numeric(10,2)     not null,
-    creation_date     date        not null default now(),
+    id                bigserial      not null primary key,
+    name              varchar(64)    not null,
+    description       varchar(64)    not null CHECK (price >= 0),
+    price             numeric(10, 2) not null,
+    creation_date     date           not null default now(),
     modification_date date,
-    duration          integer     not null CHECK (duration > 0)
+    duration          integer        not null CHECK (duration > 0)
 );
 alter TABLE certificates
     OWNER to postgres;

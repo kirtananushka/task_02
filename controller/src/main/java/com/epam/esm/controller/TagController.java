@@ -34,9 +34,10 @@ public class TagController {
 	/**
 	 * GET method getTags returns collection of TagDTO objects.
 	 * <p>
-	 * [GET /api/v1/tags/]
-	 * Request (application/json).
+	 * [GET /api/v1/tags/]<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
+	 * <p>
 	 *
 	 * @return collection of TagDTO objects (type Collection&lt;TagDTO&gt;).
 	 */
@@ -48,15 +49,16 @@ public class TagController {
 	/**
 	 * GET method getTag returns TagDTO object.
 	 * <p>
-	 * [GET /api/v1/tags/{id}]
-	 * Request (application/json).
+	 * [GET /api/v1/tags/{id}]<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
-	 * Example json:
-	 * {
-	 * "id": 1,
-	 * "name": "Suspendisse"
+	 * Example json:<br>
+	 * {<br>
+	 * "id": 1,<br>
+	 * "name": "Suspendisse"<br>
 	 * }
+	 * <p>
 	 *
 	 * @param id of type Long.
 	 * @return TagDTO.
@@ -69,15 +71,16 @@ public class TagController {
 	/**
 	 * Post method addTag adds TagDTO object.
 	 * <p>
-	 * [POST /api/v1/tags/]
-	 * Parameters: tag (TagDTO, required).
-	 * Request (application/json).
+	 * [POST /api/v1/tags/]<br>
+	 * Parameters: tag (TagDTO, required).<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
-	 * Example json:
-	 * {
-	 * "name": "Suspendisse"
+	 * Example json:<br>
+	 * {<br>
+	 * "name": "Suspendisse"<br>
 	 * }
+	 * <p>
 	 *
 	 * @param tagDTO of type TagDTO.
 	 * @return TagDTO.
@@ -92,10 +95,11 @@ public class TagController {
 	/**
 	 * DELETE method removeTag removes TagDTO object by ID.
 	 * <p>
-	 * [DELETE /api/v1/tags/{id}]
-	 * Parameters: tag id (Long, required) - unique tag ID.
-	 * Request (application/json).
+	 * [DELETE /api/v1/tags/{id}]<br>
+	 * Parameters: tag id (Long, required) - unique tag ID.<br>
+	 * Request (application/json).<br>
 	 * Response 204 (application/json).
+	 * <p>
 	 *
 	 * @param id of type Long.
 	 */

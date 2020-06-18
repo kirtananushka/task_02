@@ -33,31 +33,32 @@ public class CertificateController {
 	/**
 	 * GET method getCertificate returns CertificateDTO object by ID.
 	 * <p>
-	 * [GET /api/v1/certificates/{id}]
-	 * Parameters: certificate id (Long, required) - unique certificate ID.
-	 * Request (application/json).
+	 * [GET /api/v1/certificates/{id}]<br>
+	 * Parameters: certificate id (Long, required) - unique certificate ID.<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
-	 * Example json:
-	 * {
-	 * "id": 1,
-	 * "name": "Lorem ipsum",
-	 * "description": "Lorem ipsum dolor sit amet elit",
-	 * "price": 70.00,
-	 * "creationDate": "2020-03-01",
-	 * "modificationDate": "2020-06-18",
-	 * "duration": 270,
-	 * "tags": [
-	 * {
-	 * "id": 21,
-	 * "name": "Purus"
-	 * },
-	 * {
-	 * "id": 24,
-	 * "name": "Eleifend"
+	 * Example json:<br>
+	 * {<br>
+	 * "id": 1,<br>
+	 * "name": "Lorem ipsum",<br>
+	 * "description": "Lorem ipsum dolor sit amet elit",<br>
+	 * "price": 70.00,<br>
+	 * "creationDate": "2020-03-01",<br>
+	 * "modificationDate": "2020-06-18",<br>
+	 * "duration": 270,<br>
+	 * "tags": [<br>
+	 * {<br>
+	 * "id": 21,<br>
+	 * "name": "Purus"<br>
+	 * },<br>
+	 * {<br>
+	 * "id": 24,<br>
+	 * "name": "Eleifend"<br>
+	 * }<br>
+	 * ]<br>
 	 * }
-	 * ]
-	 * }
+	 * <p>
 	 *
 	 * @param id of type Long.
 	 * @return CertificateDTO.
@@ -70,34 +71,35 @@ public class CertificateController {
 	/**
 	 * POST method addCertificate adds CertificateDTO object.
 	 * <p>
-	 * [POST /api/v1/certificates/]
-	 * Parameters: certificate (CertificateDTO, required).
-	 * Request (application/json).
+	 * [POST /api/v1/certificates/]<br>
+	 * Parameters: certificate (CertificateDTO, required).<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
-	 * Example json:
-	 * {
-	 * "name": "Lorem ipsum",
-	 * "description": "Lorem ipsum dolor sit amet elit",
-	 * "price": 70.00,
-	 * "duration": 270,
-	 * "tags": [
-	 * {
-	 * "id": 21,
-	 * "name": "Purus"
-	 * },
-	 * {
-	 * "id": 24,
-	 * "name": "Eleifend"
-	 * }
-	 * ]
+	 * Example json:<br>
+	 * {<br>
+	 * "name": "Lorem ipsum",<br>
+	 * "description": "Lorem ipsum dolor sit amet elit",<br>
+	 * "price": 70.00,<br>
+	 * "duration": 270,<br>
+	 * "tags": [<br>
+	 * {<br>
+	 * "id": 21,<br>
+	 * "name": "Purus"<br>
+	 * },<br>
+	 * {<br>
+	 * "id": 24,<br>
+	 * "name": "Eleifend"<br>
+	 * }<br>
+	 * ]<br>
 	 * }
 	 * <p>
-	 * The length of fields "name", "description": up to 64 characters.
-	 * Price format: 12345678.90 or 12345678 (precision of 8 and a scale of 2).
-	 * Duration format: 12345678.
-	 * To assign an existing tag, you can specify ID or ID and name.
-	 * To assign a new tag, both ID and a name are required.
+	 * The length of fields "name", "description": up to 64 characters.<br>
+	 * Price format: 12345678.90 or 12345678 (precision of 8 and scale of 2 or 0).<br>
+	 * Duration format: 12345678.<br>
+	 * To assign an existing tag, you can specify ID or ID and name.<br>
+	 * To assign a new tag, both ID and a name are required.<br>
+	 * <br>
 	 *
 	 * @param certificateDTO of type CertificateDTO.
 	 * @return CertificateDTO.
@@ -113,35 +115,36 @@ public class CertificateController {
 	/**
 	 * PUT method updateCertificate updates CertificateDTO object.
 	 * <p>
-	 * [PUT /api/v1/certificates/]
-	 * Parameters: certificate (CertificateDTO, required).
-	 * Request (application/json).
+	 * [PUT /api/v1/certificates/]<br>
+	 * Parameters: certificate (CertificateDTO, required).<br>
+	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
-	 * Example json:
-	 * {
-	 * "id": 1,
-	 * "name": "Lorem ipsum",
-	 * "description": "Lorem ipsum dolor sit amet elit",
-	 * "price": 70.00,
-	 * "duration": 270,
-	 * "tags": [
-	 * {
-	 * "id": 21,
-	 * "name": "Purus"
-	 * },
-	 * {
-	 * "id": 24,
-	 * "name": "Eleifend"
-	 * }
-	 * ]
+	 * Example json:<br>
+	 * {<br>
+	 * "id": 1,<br>
+	 * "name": "Lorem ipsum",<br>
+	 * "description": "Lorem ipsum dolor sit amet elit",<br>
+	 * "price": 70.00,<br>
+	 * "duration": 270,<br>
+	 * "tags": [<br>
+	 * {<br>
+	 * "id": 21,<br>
+	 * "name": "Purus"<br>
+	 * },<br>
+	 * {<br>
+	 * "id": 24,<br>
+	 * "name": "Eleifend"<br>
+	 * }<br>
+	 * ]<br>
 	 * }
 	 * <p>
-	 * The length of fields "name", "description": up to 64 characters.
-	 * Price format: 12345678.90 or 12345678 (precision of 8 and a scale of 2).
-	 * Duration format: 12345678.
-	 * To assign an existing tag, you can specify ID or ID and name.
+	 * The length of fields "name", "description": up to 64 characters.<br>
+	 * Price format: 12345678.90 or 12345678 (precision of 8 and scale of 2 or 0).<br>
+	 * Duration format: 12345678.<br>
+	 * To assign an existing tag, you can specify ID or ID and name.<br>
 	 * To assign a new tag, both ID and a name are required.
+	 * <p>
 	 *
 	 * @param certificateDTO of type CertificateDTO.
 	 * @return CertificateDTO.
@@ -155,10 +158,10 @@ public class CertificateController {
 	/**
 	 * Method removeCertificate removes CertificateDTO object by ID.
 	 * <p>
-	 * [DELETE /api/v1/certificates/{id}]
-	 * Parameters: certificate id (Long, required) - unique certificate ID.
-	 * Request (application/json).
-	 * Response 204 (application/json).
+	 * [DELETE /api/v1/certificates/{id}]<br>
+	 * Parameters: certificate id (Long, required) - unique certificate ID.<br>
+	 * Request (application/json).<br>
+	 * Response 204 (application/json).<br>
 	 *
 	 * @param id of type Long.
 	 */

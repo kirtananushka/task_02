@@ -1,4 +1,3 @@
-
 \connect certificates_db
 
 INSERT INTO certificates

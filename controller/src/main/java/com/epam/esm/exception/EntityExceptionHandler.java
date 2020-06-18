@@ -10,9 +10,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+/**
+ * Class EntityExceptionHandler for task 2.
+ *
+ * @author KIR TANANUSHKA
+ * @version 1.0
+ */
 @ControllerAdvice
 public class EntityExceptionHandler {
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type ServiceException  .
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<EntityErrorResponse> handleException(ServiceException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
@@ -22,6 +34,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type Exception  .
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(Exception e) {
 		EntityErrorResponse error = new EntityErrorResponse(
@@ -31,6 +49,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type HttpMessageNotReadableException.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(HttpMessageNotReadableException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
@@ -40,6 +64,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type MethodArgumentTypeMismatchException.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(
 					MethodArgumentTypeMismatchException e) {
@@ -50,6 +80,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type DataIntegrityViolationException.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(DataIntegrityViolationException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
@@ -59,6 +95,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type NullPointerException.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(NullPointerException e) {
 		EntityErrorResponse error = new EntityErrorResponse(
@@ -68,6 +110,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method requestHandlingNoHandlerFound.
+	 *
+	 * @param e of type NoHandlerFoundException.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> requestHandlingNoHandlerFound(
 					NoHandlerFoundException e) {
@@ -78,6 +126,12 @@ public class EntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Method handleException.
+	 *
+	 * @param e of type Throwable.
+	 * @return ResponseEntity&lt;EntityErrorResponse&gt;.
+	 */
 	@ExceptionHandler
 	public ResponseEntity<EntityErrorResponse> handleException(Throwable e) {
 		EntityErrorResponse error = new EntityErrorResponse(
