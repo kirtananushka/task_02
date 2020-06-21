@@ -13,7 +13,7 @@ public class QueryBuilder {
 	public static final String SELECT_CERTIFICATES = "SELECT DISTINCT "
 					+ "certificates.id, certificates.name, description, price, creation_date, "
 					+ "modification_date, duration FROM certificates LEFT JOIN (tags INNER JOIN "
-					+ "certificate_tag ON tags.id = tag_id) ON  certificates.id = certificate_id ";
+					+ "certificate_tag ON tags.id = tag_id) ON certificates.id = certificate_id ";
 	public static final String SELECT_TAGS = "SELECT DISTINCT "
 					+ "tags.id, tags.name FROM tags ORDER BY id ";
 	public static final String CLAUSE_TSQUERY = "');";
@@ -119,7 +119,7 @@ public class QueryBuilder {
 		return builder;
 	}
 
-	public StringBuilder buildTagColumns(ParameterWrapper params) {
+	public StringBuilder buildTagColumns() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(SELECT_TAGS);
 		return builder;

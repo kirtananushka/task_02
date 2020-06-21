@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -109,6 +110,18 @@ class CertificateServiceImplTest {
 	void saveWithException() {
 		Assertions.assertThrows(Exception.class,
 						() -> certificateService.save(certificateSecondDTO));
+	}
+
+	@Test
+	void save() {
+		when(certificateRepository.save(any())).thenReturn(Optional.of(certificateSecond));
+		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
+	}
+
+	@Test
+	void update() {
+		when(certificateRepository.update(any())).thenReturn(Optional.of(certificateSecond));
+		Assertions.assertNotNull(certificateService.update(certificateSecondDTO).get());
 	}
 
 	@Test

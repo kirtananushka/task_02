@@ -43,6 +43,11 @@ public class DispatcherServletInitializer
 		return new String[]{"/"};
 	}
 
+	/**
+	 * Method customizeRegistration.
+	 *
+	 * @param registration of type Dynamic
+	 */
 	@Override
 	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
 		registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");

@@ -7,6 +7,8 @@ import com.epam.esm.repository.SearchRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
 import com.epam.esm.repository.mapper.TagMapper;
 import com.epam.esm.repository.querybuilder.QueryBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,7 @@ import java.util.List;
 public class SearchRepositoryImpl extends NamedParameterJdbcDaoSupport
 				implements SearchRepository {
 
+	private static final Logger log = LogManager.getLogger();
 	private TagRepositoryImpl tagRepository;
 	private QueryBuilder queryBuilder;
 
@@ -43,16 +46,16 @@ public class SearchRepositoryImpl extends NamedParameterJdbcDaoSupport
 		                                    .append(queryBuilder.buildSorting(params))
 		                                    .append(queryBuilder.buildPagination(params));
 		String query = queryBuilder.makeReplacement(builder);
-		System.out.println(query);
+		log.info("\n\n{}\n{}\n", params, query);
 		return searchCertificate(query);
 	}
 
 	@Override
 	public Collection<Tag> searchTag(ParameterWrapper params) {
-		StringBuilder builder = queryBuilder.buildTagColumns(params)
+		StringBuilder builder = queryBuilder.buildTagColumns()
 		                                    .append(queryBuilder.buildPagination(params));
 		String query = queryBuilder.makeReplacement(builder);
-		System.out.println(query);
+		log.info("\n\n{}\n{}\n", params, query);
 		return searchTag(query);
 	}
 

@@ -60,7 +60,8 @@ public class SearchController {
 	 * [GET /api/v1/certificates?creation_date=not between {creation_date} and {creation_date}]<br>
 	 * <p>
 	 * Filtering by modification date:<br>
-	 * [GET /api/v1/certificates?modification_date={modification_date}]<br>
+	 * [GET /api/v1/certificates?
+	 * modification_date={modification_date}]<br>
 	 * [GET /api/v1/certificates?modification_date=&gt;{modification_date}]<br>
 	 * [GET /api/v1/certificates?modification_date=&lt;{modification_date}]<br>
 	 * [GET /api/v1/certificates?modification_date=&lt;&gt;{modification_date}]<br>
