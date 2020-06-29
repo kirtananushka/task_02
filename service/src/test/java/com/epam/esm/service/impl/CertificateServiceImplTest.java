@@ -5,8 +5,8 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.dto.CertificateDTO;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.CertificateDto;
+import com.epam.esm.service.dto.TagDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -27,13 +29,13 @@ import static org.mockito.Mockito.when;
 class CertificateServiceImplTest {
 
 	private static Tag tag;
-	private static TagDTO tagDTO;
+	private static TagDto tagDto;
 	private static Certificate certificateFirst;
 	private static Certificate certificateSecond;
-	private static CertificateDTO certificateFirstDTO;
-	private static CertificateDTO certificateSecondDTO;
+	private static CertificateDto certificateFirstDto;
+	private static CertificateDto certificateSecondDto;
 	private static List<Tag> tagList;
-	private static List<TagDTO> tagListDTO;
+	private static List<TagDto> tagListDto;
 	private CertificateService certificateService;
 	@Mock
 	private CertificateRepository certificateRepository;
@@ -46,11 +48,11 @@ class CertificateServiceImplTest {
 		tag = new Tag();
 		tag.setId(1L);
 		tag.setName("First tag");
-		tagDTO = new TagDTO();
-		tagDTO.setId(1L);
-		tagDTO.setName("First tag");
+		tagDto = new TagDto();
+		tagDto.setId(1L);
+		tagDto.setName("First tag");
 		tagList = new ArrayList<>();
-		tagListDTO = new ArrayList<>();
+		tagListDto = new ArrayList<>();
 		certificateFirst = new Certificate();
 		certificateFirst.setId(1L);
 		certificateFirst.setName("First certificate");
@@ -58,13 +60,13 @@ class CertificateServiceImplTest {
 		certificateFirst.setPrice(new BigDecimal(100));
 		certificateFirst.setDuration(100);
 		certificateFirst.setTags(tagList);
-		certificateFirstDTO = new CertificateDTO();
-		certificateFirstDTO.setId(1L);
-		certificateFirstDTO.setName("First certificate");
-		certificateFirstDTO.setDescription("First certificate");
-		certificateFirstDTO.setPrice(new BigDecimal(100));
-		certificateFirstDTO.setDuration(100);
-		certificateFirstDTO.setTags(tagListDTO);
+		certificateFirstDto = new CertificateDto();
+		certificateFirstDto.setId(1L);
+		certificateFirstDto.setName("First certificate");
+		certificateFirstDto.setDescription("First certificate");
+		certificateFirstDto.setPrice(new BigDecimal(100));
+		certificateFirstDto.setDuration(100);
+		certificateFirstDto.setTags(tagListDto);
 		certificateSecond = new Certificate();
 		certificateSecond.setId(2L);
 		certificateSecond.setName("Second certificate");
@@ -72,21 +74,21 @@ class CertificateServiceImplTest {
 		certificateSecond.setPrice(new BigDecimal(200));
 		certificateSecond.setDuration(200);
 		certificateSecond.setTags(tagList);
-		certificateSecondDTO = new CertificateDTO();
-		certificateSecondDTO.setId(2L);
-		certificateSecondDTO.setName("Second certificate");
-		certificateSecondDTO.setDescription("Second certificate");
-		certificateSecondDTO.setPrice(new BigDecimal(200));
-		certificateSecondDTO.setDuration(200);
-		certificateSecondDTO.setTags(tagListDTO);
+		certificateSecondDto = new CertificateDto();
+		certificateSecondDto.setId(2L);
+		certificateSecondDto.setName("Second certificate");
+		certificateSecondDto.setDescription("Second certificate");
+		certificateSecondDto.setPrice(new BigDecimal(200));
+		certificateSecondDto.setDuration(200);
+		certificateSecondDto.setTags(tagListDto);
 	}
 
 	@Test
 	void getById() {
 		when(certificateRepository.getById(anyLong())).thenReturn(Optional.of(certificateFirst));
-		CertificateDTO certificateDTO = certificateService.getById(certificateFirst.getId()).get();
-		Assertions.assertEquals(certificateFirst.getId(), certificateDTO.getId());
-		Assertions.assertEquals(certificateFirst.getName(), certificateDTO.getName());
+		CertificateDto certificateDto = certificateService.getById(certificateFirst.getId()).get();
+		Assertions.assertEquals(certificateFirst.getId(), certificateDto.getId());
+		Assertions.assertEquals(certificateFirst.getName(), certificateDto.getName());
 	}
 
 	@Test
@@ -108,110 +110,93 @@ class CertificateServiceImplTest {
 
 	@Test
 	void saveWithException() {
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateSecondDTO));
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateSecondDto));
 	}
 
 	@Test
 	void save() {
 		when(certificateRepository.save(any())).thenReturn(Optional.of(certificateSecond));
-		Assertions.assertNotNull(certificateService.save(certificateSecondDTO).get());
+		Assertions.assertNotNull(certificateService.save(certificateSecondDto).get());
 	}
 
 	@Test
 	void update() {
 		when(certificateRepository.update(any())).thenReturn(Optional.of(certificateSecond));
-		Assertions.assertNotNull(certificateService.update(certificateSecondDTO).get());
+		Assertions.assertNotNull(certificateService.update(certificateSecondDto).get());
 	}
 
 	@Test
 	void saveWithIncorrectName() {
-		certificateFirstDTO.setName(
-						"ToooooooooooooooooooooooooooooooooooooooooLoooooooooooooooooooooooong");
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateFirstDTO));
+		certificateFirstDto.setName(Stream.generate(() -> "a").limit(65).collect(Collectors.joining()));
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateFirstDto));
 	}
 
 	@Test
 	void saveWithIncorrectDescription() {
-		certificateFirstDTO.setDescription(
-						"ToooooooooooooooooooooooooooooooooooooooooLoooooooooooooooooooooooong");
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateFirstDTO));
+		certificateFirstDto.setName(Stream.generate(() -> "a").limit(65).collect(Collectors.joining()));
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateFirstDto));
 	}
 
 	@Test
 	void saveWithIncorrectPrice() {
-		certificateFirstDTO.setPrice(new BigDecimal(-1));
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateFirstDTO));
+		certificateFirstDto.setPrice(new BigDecimal(-1));
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateFirstDto));
 	}
 
 	@Test
 	void saveWithIncorrectDuration() {
-		certificateFirstDTO.setDuration(-1);
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateFirstDTO));
+		certificateFirstDto.setDuration(-1);
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateFirstDto));
 	}
 
 	@Test
 	void saveWithIncorrectTagId() {
-		tagDTO.setId(-1L);
-		tagListDTO.add(tagDTO);
-		certificateFirstDTO.setTags(tagListDTO);
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.save(certificateFirstDTO));
+		tagDto.setId(-1L);
+		tagListDto.add(tagDto);
+		certificateFirstDto.setTags(tagListDto);
+		Assertions.assertThrows(Exception.class, () -> certificateService.save(certificateFirstDto));
 	}
 
 	@Test
 	void updateWithException() {
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateSecondDTO));
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateSecondDto));
 	}
 
 	@Test
 	void updateWithIncorrectName() {
-		certificateFirstDTO.setName(
-						"ToooooooooooooooooooooooooooooooooooooooooLoooooooooooooooooooooooong");
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateFirstDTO));
+		certificateFirstDto.setName(Stream.generate(() -> "a").limit(65).collect(Collectors.joining()));
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateFirstDto));
 	}
 
 	@Test
 	void updateWithIncorrectDescription() {
-		certificateFirstDTO.setDescription(
-						"ToooooooooooooooooooooooooooooooooooooooooLoooooooooooooooooooooooong");
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateFirstDTO));
+		certificateFirstDto.setName(Stream.generate(() -> "a").limit(65).collect(Collectors.joining()));
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateFirstDto));
 	}
 
 	@Test
 	void updateWithIncorrectPrice() {
-		certificateFirstDTO.setPrice(new BigDecimal(-1));
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateFirstDTO));
+		certificateFirstDto.setPrice(new BigDecimal(-1));
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateFirstDto));
 	}
 
 	@Test
 	void updateWithIncorrectDuration() {
-		certificateFirstDTO.setDuration(-1);
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateFirstDTO));
+		certificateFirstDto.setDuration(-1);
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateFirstDto));
 	}
 
 	@Test
 	void updateWithIncorrectTagId() {
-		tagDTO.setId(-1L);
-		tagListDTO.add(tagDTO);
-		certificateFirstDTO.setTags(tagListDTO);
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.update(certificateFirstDTO));
+		tagDto.setId(-1L);
+		tagListDto.add(tagDto);
+		certificateFirstDto.setTags(tagListDto);
+		Assertions.assertThrows(Exception.class, () -> certificateService.update(certificateFirstDto));
 	}
 
 	@Test
 	void removeIncorrectId() {
 		certificateFirst.setId(-1L);
-		Assertions.assertThrows(Exception.class,
-						() -> certificateService.remove(certificateFirst.getId()));
+		Assertions.assertThrows(Exception.class, () -> certificateService.remove(certificateFirst.getId()));
 	}
 }

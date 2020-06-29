@@ -2,8 +2,8 @@ package com.epam.esm.controller;
 
 import com.epam.esm.parameterwrapper.ParameterWrapper;
 import com.epam.esm.service.SearchService;
-import com.epam.esm.service.dto.CertificateDTO;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.CertificateDto;
+import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +30,7 @@ public class SearchController {
 
 	/**
 	 * GET method searchCertificate returns a collection of filtered<br>
-	 * and/or sorted CertificateDTO objects.<br>
+	 * and/or sorted CertificateDto objects.<br>
 	 * <p>
 	 * Get all:<br>
 	 * [GET /api/v1/certificates]<br>
@@ -157,12 +157,12 @@ public class SearchController {
 	 * @param tagName          of type String.
 	 * @param tagId            of type String.
 	 * @param sortBy           of type String.
-	 * @param size          of type String.
+	 * @param size             of type String.
 	 * @param page             of type String.
-	 * @return Collection&lt;CertificateDTO&gt;
+	 * @return Collection&lt;CertificateDto&gt;
 	 */
 	@GetMapping("/certificates")
-	public Collection<CertificateDTO> searchCertificate(
+	public Collection<CertificateDto> searchCertificate(
 					@RequestParam(value = "name", required = false) String name,
 					@RequestParam(value = "description", required = false) String description,
 					@RequestParam(value = "price", required = false) String price,
@@ -190,7 +190,7 @@ public class SearchController {
 	}
 
 	/**
-	 * GET method searchTag returns a collection of TagDTO objects.<br>
+	 * GET method searchTag returns a collection of TagDto objects.<br>
 	 * <p>
 	 * Get all:<br>
 	 * [GET /api/v1/tags]<br>
@@ -204,10 +204,10 @@ public class SearchController {
 	 *
 	 * @param size of type String
 	 * @param page of type String
-	 * @return collection of TagDTO objects (type Collection&lt;TagDTO&gt;).
+	 * @return collection of TagDto objects (type Collection&lt;TagDto&gt;).
 	 */
 	@GetMapping("/tags")
-	public Collection<TagDTO> searchTag(
+	public Collection<TagDto> searchTag(
 					@RequestParam(value = "size", required = false, defaultValue = "50") String size,
 					@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ParameterWrapper params = new ParameterWrapper();

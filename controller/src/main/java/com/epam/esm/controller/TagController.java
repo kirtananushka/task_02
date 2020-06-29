@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 /**
  * Class TagController for task 2.
@@ -30,7 +32,7 @@ public class TagController {
 	private final TagService tagService;
 
 	/**
-	 * GET method getTag returns TagDTO object.
+	 * GET method getTag returns TagDto object.
 	 * <p>
 	 * [GET /api/v1/tags/{id}]<br>
 	 * Request (application/json).<br>
@@ -44,18 +46,18 @@ public class TagController {
 	 * <p>
 	 *
 	 * @param id of type Long.
-	 * @return TagDTO.
+	 * @return TagDto.
 	 */
 	@GetMapping("{id}")
-	public TagDTO getTag(@PathVariable Long id) {
+	public TagDto getTag(@PathVariable Long id) {
 		return tagService.getById(id).get();
 	}
 
 	/**
-	 * Post method addTag adds TagDTO object.
+	 * Post method addTag adds TagDto object.
 	 * <p>
 	 * [POST /api/v1/tags/]<br>
-	 * Parameters: tag (TagDTO, required).<br>
+	 * Parameters: tag (TagDto, required).<br>
 	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
@@ -65,18 +67,20 @@ public class TagController {
 	 * }
 	 * <p>
 	 *
-	 * @param tagDTO of type TagDTO.
-	 * @return TagDTO.
+	 * @param tagDto of type TagDto.
+	 * @return TagDto.
 	 */
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public TagDTO addTag(@RequestBody TagDTO tagDTO) {
-		tagDTO.setId(0L);
-		return tagService.save(tagDTO).get();
+	public TagDto addTag(@RequestBody TagDto tagDto) {
+		if (Objects.isNull(tagDto.getId())) {
+			tagDto.setId(0L);
+		}
+		return tagService.save(tagDto).get();
 	}
 
 	/**
-	 * DELETE method removeTag removes TagDTO object by ID.
+	 * DELETE method removeTag removes TagDto object by ID.
 	 * <p>
 	 * [DELETE /api/v1/tags/{id}]<br>
 	 * Parameters: tag id (Long, required) - unique tag ID.<br>

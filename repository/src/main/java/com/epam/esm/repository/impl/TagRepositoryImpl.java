@@ -2,6 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.repository.RepositoryNotFoundException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,8 @@ public class TagRepositoryImpl extends NamedParameterJdbcDaoSupport
 						.query(QUERY_GET_BY_ID, params, new TagMapper())
 						.stream()
 						.findAny()
-						.orElse(null);
+						.orElseThrow(() -> new RepositoryNotFoundException(
+										"No tag with such ID: " + id));
 		return Optional.of(tag);
 	}
 

@@ -2,6 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.RepositoryNotFoundException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.mapper.CertificateMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -48,7 +49,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public Optional<Certificate> save(Certificate certificate) {
+	public Optional<Certificate> save(Certificate certificate) throws RepositoryNotFoundException {
 		KeyHolder certKeyHolder = new GeneratedKeyHolder();
 		SqlParameterSource params = new MapSqlParameterSource(
 						"name", certificate.getName())
@@ -73,7 +74,7 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public Optional<Certificate> update(Certificate certificate) {
+	public Optional<Certificate> update(Certificate certificate) throws RepositoryNotFoundException {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource params = new MapSqlParameterSource("id", certificate.getId())
 						.addValue("name", certificate.getName())
@@ -100,13 +101,13 @@ public class CertificateRepositoryImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public Optional<Certificate> getById(Long id) {
+	public Optional<Certificate> getById(Long id) throws RepositoryNotFoundException {
 		SqlParameterSource params = new MapSqlParameterSource("id", id);
 		Certificate certificate = getNamedParameterJdbcTemplate()
 						.query(QUERY_GET_BY_ID, params, new CertificateMapper())
 						.stream()
-						.findAny()
-						.orElse(null);
+						.findAny().orElseThrow(() -> new RepositoryNotFoundException(
+										"No certificate with such ID: " + id));
 		certificate.setTags(tagRepository.getTagsByCertificateId(certificate.getId()));
 		return Optional.of(certificate);
 	}

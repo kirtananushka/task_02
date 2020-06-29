@@ -5,7 +5,7 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.ServiceNotFoundException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.TagDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -25,8 +27,8 @@ class TagServiceImplTest {
 
 	private static Tag tagFirst;
 	private static Tag tagSecond;
-	private static TagDTO tagFirstDTO;
-	private static TagDTO tagSecondDTO;
+	private static TagDto tagFirstDto;
+	private static TagDto tagSecondDto;
 	private static List<Tag> tagList;
 	@Mock
 	private TagRepository tagRepository;
@@ -45,21 +47,21 @@ class TagServiceImplTest {
 		tagList = new ArrayList<>();
 		tagList.add(tagFirst);
 		tagList.add(tagSecond);
-		tagFirstDTO = new TagDTO();
-		tagFirstDTO.setId(1L);
-		tagFirstDTO.setName("First tag");
-		tagSecondDTO = new TagDTO();
-		tagSecondDTO.setId(2L);
-		tagSecondDTO.setName("Second tag");
+		tagFirstDto = new TagDto();
+		tagFirstDto.setId(1L);
+		tagFirstDto.setName("First tag");
+		tagSecondDto = new TagDto();
+		tagSecondDto.setId(2L);
+		tagSecondDto.setName("Second tag");
 	}
 
 	@Test
 	void getById() {
 		when(tagRepository.getById(anyLong())).thenReturn(Optional.of(tagFirst));
-		Optional<TagDTO> optionalTagDTO = tagService.getById(tagFirst.getId());
-		TagDTO tagDTO = optionalTagDTO.get();
-		Assertions.assertEquals(tagFirst.getId(), tagDTO.getId());
-		Assertions.assertEquals(tagFirst.getName(), tagDTO.getName());
+		Optional<TagDto> optionalTagDto = tagService.getById(tagFirst.getId());
+		TagDto tagDto = optionalTagDto.get();
+		Assertions.assertEquals(tagFirst.getId(), tagDto.getId());
+		Assertions.assertEquals(tagFirst.getName(), tagDto.getName());
 	}
 
 	@Test
@@ -81,19 +83,19 @@ class TagServiceImplTest {
 
 	@Test
 	void saveWithIncorrectId() {
-		tagFirstDTO.setId(-1L);
-		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDTO));
+		tagFirstDto.setId(-1L);
+		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDto));
 	}
 
 	@Test
 	void saveWithIncorrectName() {
-		tagFirstDTO.setName("ToooooooooooooooooooooooooooooooooooooooooLoooooooooooooooooooooooong");
-		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDTO));
+		tagFirstDto.setName(Stream.generate(() -> "a").limit(65).collect(Collectors.joining()));
+		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDto));
 	}
 
 	@Test
 	void saveWithException() {
-		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDTO));
+		Assertions.assertThrows(Exception.class, () -> tagService.save(tagFirstDto));
 	}
 
 	@Test

@@ -14,77 +14,81 @@ import java.util.Optional;
 @Component
 public class ModelMapper {
 
-	public static Optional<Certificate> convertToCertificate(CertificateDTO certificateDTO) {
+	public static Optional<Certificate> convertToCertificate(CertificateDto certificateDto) {
 		Certificate certificate = new Certificate();
 		try {
-			certificate.setId(certificateDTO.getId());
-			certificate.setName(certificateDTO.getName());
-			certificate.setDescription(certificateDTO.getDescription());
-			certificate.setPrice(certificateDTO.getPrice());
-			certificate.setCreationDate(certificateDTO.getCreationDate());
-			certificate.setModificationDate(certificateDTO.getModificationDate());
-			certificate.setDuration(certificateDTO.getDuration());
+			certificate.setId(certificateDto.getId());
+			certificate.setName(certificateDto.getName());
+			certificate.setDescription(certificateDto.getDescription());
+			certificate.setPrice(certificateDto.getPrice());
+			certificate.setCreationDate(certificateDto.getCreationDate());
+			certificate.setModificationDate(certificateDto.getModificationDate());
+			certificate.setDuration(certificateDto.getDuration());
 			List<Tag> tagList = new ArrayList<>();
-			if (Objects.nonNull(certificateDTO.getTags())) {
-				for (TagDTO tagDTO : certificateDTO.getTags()) {
+			if (Objects.nonNull(certificateDto.getTags())) {
+				for (TagDto tagDto : certificateDto.getTags()) {
 					Tag tag = new Tag();
-					tag.setId(tagDTO.getId());
-					tag.setName(tagDTO.getName());
+					tag.setId(tagDto.getId());
+					tag.setName(tagDto.getName());
 					tagList.add(tag);
 				}
 			}
 			certificate.setTags(tagList);
 		} catch (Exception e) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
+			throw new ServiceException(ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
 		}
 		return Optional.of(certificate);
 	}
 
-	public static Optional<CertificateDTO> convertToCertificateDTO(Certificate certificate) {
-		CertificateDTO certificateDTO = new CertificateDTO();
+	public static Optional<CertificateDto> convertToCertificateDto(Certificate certificate) {
+		CertificateDto certificateDto = new CertificateDto();
 		try {
-			certificateDTO.setId(certificate.getId());
-			certificateDTO.setName(certificate.getName());
-			certificateDTO.setDescription(certificate.getDescription());
-			certificateDTO.setPrice(certificate.getPrice());
-			certificateDTO.setCreationDate(certificate.getCreationDate());
-			certificateDTO.setModificationDate(certificate.getModificationDate());
-			certificateDTO.setDuration(certificate.getDuration());
-			List<TagDTO> tagDTOList = new ArrayList<>();
-			for (Tag tag : certificate.getTags()) {
-				TagDTO tagDTO = new TagDTO();
-				tagDTO.setId(tag.getId());
-				tagDTO.setName(tag.getName());
-				tagDTOList.add(tagDTO);
+			if (Objects.nonNull(certificate.getId())) {
+				certificateDto.setId(certificate.getId());
 			}
-			certificateDTO.setTags(tagDTOList);
+			certificateDto.setName(certificate.getName());
+			certificateDto.setDescription(certificate.getDescription());
+			certificateDto.setPrice(certificate.getPrice());
+			certificateDto.setCreationDate(certificate.getCreationDate());
+			certificateDto.setModificationDate(certificate.getModificationDate());
+			certificateDto.setDuration(certificate.getDuration());
+			List<TagDto> tagDtoList = new ArrayList<>();
+			for (Tag tag : certificate.getTags()) {
+				TagDto tagDto = new TagDto();
+				if (Objects.nonNull(tag.getId())) {
+					tagDto.setId(tag.getId());
+				}
+				tagDto.setName(tag.getName());
+				tagDtoList.add(tagDto);
+			}
+			certificateDto.setTags(tagDtoList);
 		} catch (Exception e) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
+			throw new ServiceException(ErrorMessage.ERROR_CERTIFICATE_CONVERSION, e);
 		}
-		return Optional.of(certificateDTO);
+		return Optional.of(certificateDto);
 	}
 
-	public static Optional<Tag> convertToTag(TagDTO tagDTO) {
+	public static Optional<Tag> convertToTag(TagDto tagDto) {
 		Tag tag = new Tag();
 		try {
-			tag.setId(tagDTO.getId());
-			tag.setName(tagDTO.getName());
+			if (Objects.nonNull(tagDto.getId())) {
+				tag.setId(tagDto.getId());
+			}
+			tag.setName(tagDto.getName());
 		} catch (Exception e) {
 			throw new ServiceException(ErrorMessage.ERROR_TAG_CONVERSION, e);
 		}
 		return Optional.of(tag);
 	}
 
-	public static Optional<TagDTO> convertToTagDTO(Tag tag) {
-		TagDTO tagDTO = new TagDTO();
+	public static Optional<TagDto> convertToTagDto(Tag tag) {
+		TagDto tagDto = new TagDto();
 		try {
-			tagDTO.setId(tag.getId());
-			tagDTO.setName(tag.getName());
+			tagDto.setId(tag.getId());
+			tagDto.setName(tag.getName());
 		} catch (Exception e) {
 			throw new ServiceException(ErrorMessage.ERROR_TAG_CONVERSION, e);
 		}
-		return Optional.of(tagDTO);
+		return Optional.of(tagDto);
 	}
 }

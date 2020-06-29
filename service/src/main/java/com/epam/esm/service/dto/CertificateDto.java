@@ -1,8 +1,10 @@
 package com.epam.esm.service.dto;
 
 import com.epam.esm.service.ErrorMessage;
+import com.epam.esm.util.IntegerDeserializer;
 import com.epam.esm.util.LocalDateDeserializer;
 import com.epam.esm.util.LocalDateSerializer;
+import com.epam.esm.util.LongDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
@@ -19,8 +21,9 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CertificateDTO extends EntityDTO {
+public class CertificateDto extends EntityDto {
 
+	@JsonDeserialize(using = LongDeserializer.class)
 	@NotNull(message = ErrorMessage.ERROR_INVALID_CERTIFICATE_ID)
 	@PositiveOrZero(message = ErrorMessage.ERROR_INVALID_CERTIFICATE_ID)
 	private Long id;
@@ -40,7 +43,8 @@ public class CertificateDTO extends EntityDTO {
 	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate modificationDate;
 	@Positive(message = ErrorMessage.ERROR_INVALID_DURATION)
-	@Digits(integer = 8, fraction = 2, message = ErrorMessage.ERROR_INVALID_DURATION)
+	@Digits(integer = 8, fraction = 0, message = ErrorMessage.ERROR_INVALID_DURATION)
+	@JsonDeserialize(using = IntegerDeserializer.class)
 	private int duration;
-	private List<TagDTO> tags;
+	private List<TagDto> tags;
 }

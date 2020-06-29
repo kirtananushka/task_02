@@ -41,7 +41,7 @@ public class ErrorMessage {
 	public static final String ERROR_CERTIFICATE_NOT_DELETED =
 					"Certificate not deleted";
 	public static final String ERROR_CERTIFICATE_CONVERSION =
-					"Error while certificate entity<->DTO conversion";
+					"Error while certificate entity<->Dto conversion";
 	public static final String ERROR_TAG_ID_NAME_NOT_RELEVANT =
 					"ID and tag name are not relevant; ID: ";
 	public static final String EXPECTED_NAME =
@@ -55,7 +55,7 @@ public class ErrorMessage {
 	public static final String ERROR_TAG_NOT_DELETED =
 					"Tag not deleted";
 	public static final String ERROR_TAG_CONVERSION =
-					"Error while tag entity<->DTO conversion";
+					"Error while tag entity<->Dto conversion";
 	public static final String ERROR_CREATION_DATE_EXPR =
 					"Invalid expression with creation date: ";
 	public static final String ERROR_MODIFICATION_DATE_EXPR =
@@ -64,8 +64,18 @@ public class ErrorMessage {
 					"Invalid page number: ";
 	public static final String ERROR_INVALID_SIZE_PER_PAGE =
 					"Invalid number of positions per page: ";
+	public static final String ERROR_OVERSIZED_PAGE =
+					"The number of positions per page is limited to ";
 	public static final String ERROR_INCORRECT_PARAM_SORTING =
 					"Incorrect parameter for sorting: ";
 	public static final String ERROR_ADD_TAG_WITHOUT_NAME =
 					"You cannot add new tag without name; tag ID: ";
+	public static final String ERROR_CONFLICT_CERTIFICATE_ID_EXISTS =
+					"Certificate with the specified ID already exists: ";
+	public static final String ERROR_CONFLICT_CERTIFICATE_ID_NEW =
+					"You cannot assign an identifier to a new certificate; identifiers are assigned automatically";
+	public static final String ERROR_CONFLICT_TAG_ID_EXISTS =
+					"Tag with the specified ID already exists: ";
+	public static final String ERROR_CONFLICT_TAG_ID_NEW =
+					"You cannot assign an identifier to a new tag; identifiers are assigned automatically";
 }

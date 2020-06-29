@@ -1,14 +1,14 @@
 package com.epam.esm.service;
 
 import com.epam.esm.parameterwrapper.ParameterWrapper;
-import com.epam.esm.service.dto.CertificateDTO;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.CertificateDto;
+import com.epam.esm.service.dto.TagDto;
 
 import java.util.Collection;
 
 public interface SearchService {
 
-	Collection<CertificateDTO> searchCertificate(ParameterWrapper parameterWrapper);
+	Collection<CertificateDto> searchCertificate(ParameterWrapper parameterWrapper);
 
-	Collection<TagDTO> searchTag(ParameterWrapper parameterWrapper);
+	Collection<TagDto> searchTag(ParameterWrapper parameterWrapper);
 }

@@ -1,7 +1,7 @@
 package com.epam.esm.service.validation;
 
 import com.epam.esm.service.ServiceException;
-import com.epam.esm.service.dto.EntityDTO;
+import com.epam.esm.service.dto.EntityDto;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,13 +30,15 @@ public class EntityValidator {
 	private static final String NOT = "NOT ";
 	private static final String AND = " AND ";
 	private static final String SEMICOLON = "; ";
+	private static final int RECORDS_PER_PAGE = 50;
 	private static final List<String> sortParams = Arrays.asList("certificates.id", "name",
-					"description", "price", "creation_date", "modification_date", "duration");
+	                                                             "description", "price", "creation_date",
+	                                                             "modification_date", "duration");
 
-	public static <T extends EntityDTO> void validate(T entityDTO) {
+	public static <T extends EntityDto> void validate(T entityDto) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
-		Set<ConstraintViolation<T>> constraintViolations = validator.validate(entityDTO);
+		Set<ConstraintViolation<T>> constraintViolations = validator.validate(entityDto);
 		if (Objects.nonNull(constraintViolations) && !constraintViolations.isEmpty()) {
 			StringBuilder errorBuilder = new StringBuilder();
 			for (ConstraintViolation<T> constraintViolation : constraintViolations) {
@@ -77,6 +79,14 @@ public class EntityValidator {
 		}
 		param = param.replaceAll(MINUS, EMPTINESS);
 		return sortParams.contains(param);
+	}
+
+	public static boolean checkRecordsPerPage(String strInteger) {
+		return (Integer.parseInt(strInteger) <= RECORDS_PER_PAGE);
+	}
+
+	public static int getRecordsPerPage() {
+		return RECORDS_PER_PAGE;
 	}
 
 	private static boolean checkQuery(String query, String pattern) {

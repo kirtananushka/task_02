@@ -5,9 +5,9 @@ import com.epam.esm.repository.SearchRepository;
 import com.epam.esm.service.ErrorMessage;
 import com.epam.esm.service.SearchService;
 import com.epam.esm.service.ServiceException;
-import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.CertificateDto;
 import com.epam.esm.service.dto.ModelMapper;
-import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.TagDto;
 import com.epam.esm.service.validation.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class SearchServiceImpl implements SearchService {
 	private final SearchRepository searchRepository;
 
 	@Override
-	public Collection<CertificateDTO> searchCertificate(ParameterWrapper params) {
+	public Collection<CertificateDto> searchCertificate(ParameterWrapper params) {
 		if (Objects.nonNull(params.getPrice())
 						&& !EntityValidator.checkPriceQuery(params.getPrice())) {
 			throw new ServiceException(
@@ -52,16 +52,7 @@ public class SearchServiceImpl implements SearchService {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_TAG_ID_EXPR + params.getTagId());
 		}
-		if (Objects.nonNull(params.getPage())
-						&& !EntityValidator.checkIntegerQuery(params.getPage())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_PAGE + params.getPage());
-		}
-		if (Objects.nonNull(params.getSize())
-						&& !EntityValidator.checkIntegerQuery(params.getSize())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_SIZE_PER_PAGE + params.getSize());
-		}
+		checkPages(params);
 		if (Objects.nonNull(params.getSortBy())) {
 			for (String param : params.getSortBy().split(",")) {
 				if (!EntityValidator.checkSortBy(param)) {
@@ -72,27 +63,36 @@ public class SearchServiceImpl implements SearchService {
 		}
 		return searchRepository.searchCertificate(params)
 		                       .stream()
-		                       .map(ModelMapper::convertToCertificateDTO)
+		                       .map(ModelMapper::convertToCertificateDto)
 		                       .map(Optional::get)
 		                       .collect(Collectors.toList());
 	}
 
 	@Override
-	public Collection<TagDTO> searchTag(ParameterWrapper params) {
+	public Collection<TagDto> searchTag(ParameterWrapper params) {
+		checkPages(params);
+		return searchRepository.searchTag(params)
+		                       .stream()
+		                       .map(ModelMapper::convertToTagDto)
+		                       .map(Optional::get)
+		                       .collect(Collectors.toList());
+	}
+
+	private void checkPages(ParameterWrapper params) {
 		if (Objects.nonNull(params.getPage())
 						&& !EntityValidator.checkIntegerQuery(params.getPage())) {
 			throw new ServiceException(
 							ErrorMessage.ERROR_INVALID_PAGE + params.getPage());
 		}
-		if (Objects.nonNull(params.getSize())
-						&& !EntityValidator.checkIntegerQuery(params.getSize())) {
-			throw new ServiceException(
-							ErrorMessage.ERROR_INVALID_SIZE_PER_PAGE + params.getSize());
+		if (Objects.nonNull(params.getSize())) {
+			if (!EntityValidator.checkIntegerQuery(params.getSize())) {
+				throw new ServiceException(
+								ErrorMessage.ERROR_INVALID_SIZE_PER_PAGE + params.getSize());
+			}
+			if (!EntityValidator.checkRecordsPerPage(params.getSize())) {
+				throw new ServiceException(
+								ErrorMessage.ERROR_OVERSIZED_PAGE + EntityValidator.getRecordsPerPage());
+			}
 		}
-		return searchRepository.searchTag(params)
-		                       .stream()
-		                       .map(ModelMapper::convertToTagDTO)
-		                       .map(Optional::get)
-		                       .collect(Collectors.toList());
 	}
 }

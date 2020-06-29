@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.service.CertificateService;
-import com.epam.esm.service.dto.CertificateDTO;
+import com.epam.esm.service.dto.CertificateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 /**
  * Class CertificateController for task 2.
@@ -31,7 +33,7 @@ public class CertificateController {
 	private final CertificateService certificateService;
 
 	/**
-	 * GET method getCertificate returns CertificateDTO object by ID.
+	 * GET method getCertificate returns CertificateDto object by ID.
 	 * <p>
 	 * [GET /api/v1/certificates/{id}]<br>
 	 * Parameters: certificate id (Long, required) - unique certificate ID.<br>
@@ -61,18 +63,18 @@ public class CertificateController {
 	 * <p>
 	 *
 	 * @param id of type Long.
-	 * @return CertificateDTO.
+	 * @return CertificateDto.
 	 */
 	@GetMapping("/{id}")
-	public CertificateDTO getCertificate(@PathVariable Long id) {
+	public CertificateDto getCertificate(@PathVariable Long id) {
 		return certificateService.getById(id).get();
 	}
 
 	/**
-	 * POST method addCertificate adds CertificateDTO object.
+	 * POST method addCertificate adds CertificateDto object.
 	 * <p>
 	 * [POST /api/v1/certificates/]<br>
-	 * Parameters: certificate (CertificateDTO, required).<br>
+	 * Parameters: certificate (CertificateDto, required).<br>
 	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
@@ -101,22 +103,24 @@ public class CertificateController {
 	 * To assign a new tag, both ID and a name are required.<br>
 	 * <br>
 	 *
-	 * @param certificateDTO of type CertificateDTO.
-	 * @return CertificateDTO.
+	 * @param certificateDto of type CertificateDto.
+	 * @return CertificateDto.
 	 */
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CertificateDTO addCertificate(@RequestBody CertificateDTO certificateDTO) {
-		certificateDTO.setId(0L);
-		certificateDTO = certificateService.save(certificateDTO).get();
-		return certificateDTO;
+	public CertificateDto addCertificate(@RequestBody CertificateDto certificateDto) {
+		if (Objects.isNull(certificateDto.getId())) {
+			certificateDto.setId(0L);
+		}
+		certificateDto = certificateService.save(certificateDto).get();
+		return certificateDto;
 	}
 
 	/**
-	 * PUT method updateCertificate updates CertificateDTO object.
+	 * PUT method updateCertificate updates CertificateDto object.
 	 * <p>
 	 * [PUT /api/v1/certificates/]<br>
-	 * Parameters: certificate (CertificateDTO, required).<br>
+	 * Parameters: certificate (CertificateDto, required).<br>
 	 * Request (application/json).<br>
 	 * Response 200 (application/json).
 	 * <p>
@@ -146,17 +150,17 @@ public class CertificateController {
 	 * To assign a new tag, both ID and a name are required.
 	 * <p>
 	 *
-	 * @param certificateDTO of type CertificateDTO.
-	 * @return CertificateDTO.
+	 * @param certificateDto of type CertificateDto.
+	 * @return CertificateDto.
 	 */
 	@PutMapping
-	public CertificateDTO updateCertificate(@RequestBody CertificateDTO certificateDTO) {
-		certificateDTO = certificateService.update(certificateDTO).get();
-		return certificateDTO;
+	public CertificateDto updateCertificate(@RequestBody CertificateDto certificateDto) {
+		certificateDto = certificateService.update(certificateDto).get();
+		return certificateDto;
 	}
 
 	/**
-	 * Method removeCertificate removes CertificateDTO object by ID.
+	 * Method removeCertificate removes CertificateDto object by ID.
 	 * <p>
 	 * [DELETE /api/v1/certificates/{id}]<br>
 	 * Parameters: certificate id (Long, required) - unique certificate ID.<br>

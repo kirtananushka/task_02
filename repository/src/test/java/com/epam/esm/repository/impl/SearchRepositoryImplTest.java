@@ -19,7 +19,7 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {RepositoryTestConfig.class})
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 class SearchRepositoryImplTest {
 
 	@Autowired

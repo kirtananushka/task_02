@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ContextConfiguration(classes = {RepositoryTestConfig.class})
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 public class CertificateRepositoryImplTest {
 
 	private static final Certificate certificate;
