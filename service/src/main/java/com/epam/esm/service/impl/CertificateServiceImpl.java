@@ -128,9 +128,10 @@ public class CertificateServiceImpl implements CertificateService {
 				}
 				if (tagService.getById(tagDto.getId()).isPresent() && !tagService.getById(tagDto.getId()).get().getName()
 				                                                                 .equals(tagDto.getName())) {
-					throw new ServiceException(
-									ErrorMessage.ERROR_TAG_ID_NAME_NOT_RELEVANT + tagDto.getId() + ErrorMessage.EXPECTED_NAME + tagService
-													.getById(tagDto.getId()).get().getName() + ErrorMessage.ERROR_NAME + tagDto.getName());
+					throw new ServiceConflictRequestException(
+									ErrorMessage.ERROR_TAG_ID_NAME_NOT_RELEVANT + tagDto.getId()
+													+ ErrorMessage.EXPECTED_NAME + tagService.getById(tagDto.getId()).get().getName()
+													+ ErrorMessage.ERROR_NAME + tagDto.getName());
 				}
 			}
 		}
