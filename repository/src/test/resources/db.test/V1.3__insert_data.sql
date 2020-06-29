@@ -1,4 +1,4 @@
---\connect certificates_test_db
+-- connect certificates_db_test
 
 INSERT INTO certificates
     (name, description, price, creation_date, modification_date, duration)

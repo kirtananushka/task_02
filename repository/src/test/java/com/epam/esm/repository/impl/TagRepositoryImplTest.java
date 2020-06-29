@@ -2,6 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.parameterwrapper.ParameterWrapper;
+import com.epam.esm.repository.RepositoryNotFoundException;
 import com.epam.esm.repository.config.RepositoryTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -34,16 +35,16 @@ class TagRepositoryImplTest {
 	private SearchRepositoryImpl searchRepository;
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void getById() {
 		Assertions.assertNotNull(tagRepository.getById(21L).get());
 		Assertions.assertEquals(tag, tagRepository.getById(21L).get());
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void save() {
 		Tag tag = new Tag();
 		tag.setId(31L);
@@ -54,8 +55,8 @@ class TagRepositoryImplTest {
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void remove() {
 		ParameterWrapper params = new ParameterWrapper();
 		params.setPage("1");
@@ -64,13 +65,13 @@ class TagRepositoryImplTest {
 		Assertions.assertEquals(30, searchRepository.searchTag(params).size());
 		tagRepository.remove(testTag.get());
 		Assertions.assertEquals(29, searchRepository.searchTag(params).size());
-		Assertions.assertThrows(NullPointerException.class,
-						() -> tagRepository.getById(1L).get());
+		Assertions.assertThrows(RepositoryNotFoundException.class,
+		                        () -> tagRepository.getById(1L).get());
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void getTagsByCertificateId() {
 		Assertions.assertEquals(21L, tagRepository.getTagsByCertificateId(1L).get(0).getId());
 	}

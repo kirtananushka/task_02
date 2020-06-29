@@ -1,4 +1,4 @@
--- \connect certificates_test_db
+-- connect certificates_db_test
 
 -- -------------------------------------
 drop TABLE IF EXISTS certificate_tag;

@@ -3,6 +3,7 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.RepositoryNotFoundException;
 import com.epam.esm.repository.config.RepositoryTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -51,15 +52,15 @@ public class CertificateRepositoryImplTest {
 	private CertificateRepository certificateRepository;
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void getAll() {
 		Assertions.assertEquals(10, certificateRepository.getAll().size());
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void getById() {
 		Optional<Certificate> testCertificate = certificateRepository.getById(1L);
 		Assertions.assertNotNull(testCertificate);
@@ -67,8 +68,8 @@ public class CertificateRepositoryImplTest {
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void save() {
 		Optional<Certificate> testCertificate = certificateRepository.save(certificate);
 		Assertions.assertNotNull(testCertificate);
@@ -76,20 +77,20 @@ public class CertificateRepositoryImplTest {
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void remove() {
 		Optional<Certificate> testCertificate = certificateRepository.getById(1L);
 		Assertions.assertEquals(10, certificateRepository.getAll().size());
 		certificateRepository.remove(testCertificate.get());
 		Assertions.assertEquals(9, certificateRepository.getAll().size());
-		Assertions.assertThrows(NullPointerException.class,
-						() -> certificateRepository.getById(1L).get());
+		Assertions.assertThrows(RepositoryNotFoundException.class,
+		                        () -> certificateRepository.getById(1L).get());
 	}
 
 	@Test
-	@Sql("/db.test/v1_0__initial_test_schema_creation.sql")
-	@Sql("/db.test/test_inserts.sql")
+	@Sql("/db.test/V1.2__create_schema.sql")
+	@Sql("/db.test/V1.3__insert_data.sql")
 	void update() {
 		Certificate certificate = certificateRepository.getById(1L).get();
 		certificate.setModificationDate(LocalDate.now());
